@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -18,9 +18,12 @@ import {
   setDeadline,
   setDescription,
   toggleDialogOpen,
+  resetTask,
 } from "../Redux/NewTaskSlice";
 import { RootState } from "../Redux/store";
 import { ClassNames } from "@emotion/react";
+import { setTasks } from "../Redux/Misc";
+import { item } from "../Interfaces";
 
 const useStyles = makeStyles({
   form: {
@@ -45,8 +48,9 @@ const useStyles = makeStyles({
   addBtn: { margin: "1em" },
 });
 
-const TodoForm = ({ apiUrl, updateTodoList }) => {
+const TodoForm = () => {
   //Redux State
+  const dispatch = useDispatch();
   const title = useSelector((state: RootState) => state.newTask.title);
   const description = useSelector(
     (state: RootState) => state.newTask.description
@@ -55,21 +59,21 @@ const TodoForm = ({ apiUrl, updateTodoList }) => {
   const dialogOpen = useSelector(
     (state: RootState) => state.newTask.dialogOpen
   );
-  const dispatch = useDispatch();
-
+  const api_url = useSelector((state: RootState) => state.misc.apiUrl);
+  const tasks = useSelector((state: RootState) => state.misc.tasks);
+  const id = useSelector((state: RootState) => state.newTask.id);
   //Styling
   const classes = useStyles();
 
   //Event handlers
   const handleClose = () => {
-    dispatch(toggleDialogOpen());
+    dispatch(resetTask());
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // console.log(e.target);
     formSubmit(e.target);
-    dispatch(toggleDialogOpen());
   };
 
   const handleTaskChange = (e) => {
@@ -85,32 +89,46 @@ const TodoForm = ({ apiUrl, updateTodoList }) => {
   const formSubmit = async (formData) => {
     let data = new FormData(formData);
     console.log(Array.from(data));
-    await fetch(apiUrl, {
-      method: "POST",
-      mode: "cors",
-      body: data,
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        updateTodoList(response);
-
-        dispatch(setTitle(""));
-        dispatch(setDescription(""));
+    if (id === -1) {
+      //If id===-1, creating new task, else updating existing task
+      await fetch(api_url + "/tasks", {
+        method: "POST",
+        mode: "cors",
+        body: data,
       })
-      .catch((error) => console.log(error));
+        .then((response) => response.json())
+        .then((response) => {
+          dispatch(setTasks(tasks.concat([response])));
+          dispatch(resetTask());
+        })
+        .catch((error) => console.log(error));
+    } else {
+      await fetch(api_url + `/tasks/${id}`, {
+        method: "PATCH",
+        mode: "cors",
+        body: data,
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          dispatch(
+            setTasks(tasks.filter((x) => x.id !== id).concat([response]))
+          );
+          dispatch(resetTask());
+        })
+        .catch((error) => console.log(error));
+    }
   };
 
+  useEffect(() => {
+    title === "" &&
+      dispatch(setDeadline(new Date(new Date().toLocaleString()))); //default date in DateTime picker is always current time when dialog opens
+  }, [dialogOpen]);
   return (
     <>
       <Dialog open={dialogOpen} onClose={handleClose} sx={{ borderRadius: 40 }}>
         <DialogTitle>Add a new Task</DialogTitle>
-        {/* <Grid container> */}
-        {/* <Grid item xs></Grid> */}
-        {/* <Grid item xs={10}> */}
         <form onSubmit={handleSubmit} id="task_form" autoComplete="off">
           <DialogContent>
-            {/* <Grid container> */}
-            {/* <Grid item xs={12}> */}
             <TextField
               id="task_input"
               label="Name"
@@ -120,8 +138,6 @@ const TodoForm = ({ apiUrl, updateTodoList }) => {
               value={title}
               onChange={handleTaskChange}
             />
-            {/* </Grid> */}
-            {/* <Grid item xs={12}> */}
             <TextField
               id="description_input"
               label="Description"
@@ -131,9 +147,6 @@ const TodoForm = ({ apiUrl, updateTodoList }) => {
               onChange={handleDescriptionChange}
               value={description}
             ></TextField>
-            {/* </Grid> */}
-            {/* </Grid> */}
-            {/* <Grid item xs={2}> */}
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DateTimePicker
                 renderInput={(params) => (
@@ -152,12 +165,8 @@ const TodoForm = ({ apiUrl, updateTodoList }) => {
                 }}
               />
             </LocalizationProvider>
-            {/* </Grid> */}
-            {/* <Grid item xs={2}> */}
             <TagPicker />
-            {/* </Grid> */}
           </DialogContent>
-          {/* <Grid item xs={2}> */}
           <DialogActions>
             <Button onClick={handleClose} className={classes.cancelBtn}>
               Cancel
@@ -168,14 +177,10 @@ const TodoForm = ({ apiUrl, updateTodoList }) => {
               type="submit"
               style={{ height: "100%" }}
             >
-              Add Task
+              {id === -1 ? "Add Task" : "Update Task"}
             </Button>
           </DialogActions>
-          {/* </Grid> */}
         </form>
-        {/* </Grid> */}
-        {/* <Grid item xs></Grid> */}
-        {/* </Grid> */}
       </Dialog>
     </>
   );

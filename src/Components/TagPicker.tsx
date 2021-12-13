@@ -8,20 +8,18 @@ import { RootState } from "../Redux/store";
 
 const filter = createFilterOptions<TagOptionType>();
 
-const api_url: string = "http://localhost:3001/api/v1/tasks";
-
 export default function TagPicker() {
+  const api_url = useSelector((state: RootState) => state.misc.apiUrl);
   const tag = useSelector((state: RootState) => state.newTask.tag);
   const dispatch = useDispatch();
 
   const [tags, setTags] = useState<TagOptionType[]>([]);
-
   function onlyUnique(value: string, index: number, self: string[]) {
     return self.indexOf(value) === index;
   }
 
   const getTasks = () => {
-    fetch(api_url)
+    fetch(api_url + "/tasks")
       .then((response) => response.json())
       .then((response_items: item[]) => {
         setTags(
