@@ -49,7 +49,7 @@ const TodoList = () => {
               style={{ color: "#E480F6" }}
               onClick={() => {
                 dispatch(toggleDialogOpen());
-                console.log(tasks);
+                // console.log(tasks);
               }}
             >
               <AddCircleOutlinedIcon

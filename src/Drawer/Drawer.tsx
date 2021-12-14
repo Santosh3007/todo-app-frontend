@@ -99,7 +99,7 @@ export default function MiniDrawer() {
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
-    console.log("Hello");
+    // console.log("Hello");
     setOpen(true);
   };
 
@@ -110,24 +110,24 @@ export default function MiniDrawer() {
   const iconListTop = (index: number) => {
     switch (index) {
       case 0:
-        return <HomeIcon />;
+        return <HomeIcon fontSize="large" />;
       case 1:
-        return <AssignmentTurnedInIcon />;
+        return <AssignmentTurnedInIcon fontSize="large" />;
       case 2:
-        return <DeleteSweepIcon />;
+        return <DeleteSweepIcon fontSize="large" />;
       default:
-        return <InboxIcon />;
+        return <InboxIcon fontSize="large" />;
     }
   };
 
   const iconListBottom = (index: number) => {
     switch (index) {
       case 0:
-        return <ManageAccountsIcon />;
+        return <ManageAccountsIcon fontSize="large" />;
       case 1:
-        return <LogoutIcon />;
+        return <LogoutIcon fontSize="large" />;
       default:
-        return <LogoutIcon />;
+        return <LogoutIcon fontSize="large" />;
     }
   };
 

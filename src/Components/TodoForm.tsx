@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
+// import Grid from "@mui/material/Grid";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -17,18 +17,12 @@ import {
   setTitle,
   setDeadline,
   setDescription,
-  toggleDialogOpen,
   resetTask,
 } from "../Redux/NewTaskSlice";
 import { RootState } from "../Redux/store";
-import { ClassNames } from "@emotion/react";
 import { setTasks } from "../Redux/Misc";
-import { item } from "../Interfaces";
 
 const useStyles = makeStyles({
-  form: {
-    borderRadius: 515,
-  },
   nameField: {
     margin: "1em",
   },
@@ -125,8 +119,16 @@ const TodoForm = () => {
   }, [dialogOpen]);
   return (
     <>
-      <Dialog open={dialogOpen} onClose={handleClose} sx={{ borderRadius: 40 }}>
-        <DialogTitle>Add a new Task</DialogTitle>
+      <Dialog
+        open={dialogOpen}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            borderRadius: 28,
+          },
+        }}
+      >
+        <DialogTitle>{id === -1 ? "Add a new Task" : "Edit Task"}</DialogTitle>
         <form onSubmit={handleSubmit} id="task_form" autoComplete="off">
           <DialogContent>
             <TextField
@@ -152,14 +154,14 @@ const TodoForm = () => {
                 renderInput={(params) => (
                   <TextField
                     id="deadline_input"
-                    type="date"
+                    type="text"
                     name="task[deadline]"
-                    value={deadline}
                     className={classes.dateTimePicker}
                     {...params}
                   />
                 )}
                 value={deadline}
+                inputFormat="dd/MM/yyyy hh:mm a"
                 onChange={(newDate: Date | null) => {
                   newDate && dispatch(setDeadline(newDate));
                 }}
