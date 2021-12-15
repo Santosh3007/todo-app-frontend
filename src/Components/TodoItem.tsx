@@ -20,8 +20,8 @@ const useStyles = makeStyles({
   paper: {
     margin: "1em",
     padding: "1em",
-    textAlign: "justify",
-    maxWidth: 600,
+    // textAlign: "justify",
+    width: "auto",
   },
   tag: {
     margin: "1em",

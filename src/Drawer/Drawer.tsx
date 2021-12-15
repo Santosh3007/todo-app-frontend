@@ -22,6 +22,7 @@ import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { Link, Outlet } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -110,9 +111,17 @@ export default function MiniDrawer() {
   const iconListTop = (index: number) => {
     switch (index) {
       case 0:
-        return <HomeIcon fontSize="large" />;
+        return (
+          <Link to="/home">
+            <HomeIcon fontSize="large" />;
+          </Link>
+        );
       case 1:
-        return <AssignmentTurnedInIcon fontSize="large" />;
+        return (
+          <Link to="/completed">
+            <AssignmentTurnedInIcon fontSize="large" />;
+          </Link>
+        );
       case 2:
         return <DeleteSweepIcon fontSize="large" />;
       default:
@@ -123,7 +132,11 @@ export default function MiniDrawer() {
   const iconListBottom = (index: number) => {
     switch (index) {
       case 0:
-        return <ManageAccountsIcon fontSize="large" />;
+        return (
+          <Link to="/account">
+            <ManageAccountsIcon fontSize="large" />;
+          </Link>
+        );
       case 1:
         return <LogoutIcon fontSize="large" />;
       default:
@@ -193,6 +206,7 @@ export default function MiniDrawer() {
           ))}
         </List>
       </Drawer>
+      <Outlet />
     </Box>
   );
 }

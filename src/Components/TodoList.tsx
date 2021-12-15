@@ -12,10 +12,11 @@ import { RootState } from "../Redux/store";
 
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
 
-const TodoList = () => {
-  // const [tasks, setTasks] = useState<item[]>([]);
+const TodoList = (props: { completed: boolean }) => {
   const api_url = useSelector((state: RootState) => state.misc.apiUrl);
-  const tasks = useSelector((state: RootState) => state.misc.tasks);
+  const tasks = useSelector((state: RootState) => state.misc.tasks).filter(
+    (task) => task.completed === props.completed
+  );
   const dispatch = useDispatch();
 
   const getTasks = () => {
