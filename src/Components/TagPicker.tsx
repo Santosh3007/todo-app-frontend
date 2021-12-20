@@ -8,7 +8,7 @@ import { RootState } from "../Redux/store";
 
 const filter = createFilterOptions<TagOptionType>();
 
-export default function TagPicker() {
+export default function TagPicker(props: { typeOfTask: string }) {
   const api_url = useSelector((state: RootState) => state.misc.apiUrl);
   const tag = useSelector((state: RootState) => state.newTask.tag);
   const dispatch = useDispatch();
@@ -96,7 +96,7 @@ export default function TagPicker() {
             label="Tag"
             id="tag_input"
             type="text"
-            name="task[tag]"
+            name={props.typeOfTask + "[tag]"}
           />
         )}
       />

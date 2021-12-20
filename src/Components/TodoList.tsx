@@ -2,11 +2,13 @@ import React, { useEffect } from "react";
 import TodoItem from "./TodoItem";
 import Grid from "@mui/material/Grid";
 import TodoForm from "./TodoForm";
-import { item } from "../Interfaces";
+import SubTodoForm from "./SubtodoForm";
+
+import { item, subTask } from "../Interfaces";
 import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleDialogOpen } from "../Redux/NewTaskSlice";
-import { setTasks } from "../Redux/Misc";
+import { toggleTaskDialogOpen } from "../Redux/NewTaskSlice";
+import { setTasks, setSubtasks } from "../Redux/Misc";
 import MiniDrawer from "../Drawer/Drawer";
 import { RootState } from "../Redux/store";
 
@@ -24,6 +26,12 @@ const TodoList = (props: { completed: boolean }) => {
       .then((response) => response.json())
       .then((response_items: item[]) => {
         dispatch(setTasks(response_items));
+      })
+      .catch((error) => console.log(error));
+    fetch(api_url + "/subtasks")
+      .then((response) => response.json())
+      .then((response_items: subTask[]) => {
+        dispatch(setSubtasks(response_items));
       })
       .catch((error) => console.log("here" + error));
   };
@@ -45,11 +53,12 @@ const TodoList = (props: { completed: boolean }) => {
             ))}
           </ul>
           <TodoForm />
+          <SubTodoForm />
           <Grid container justifyContent="flex-end">
             <IconButton
               style={{ color: "#E480F6" }}
               onClick={() => {
-                dispatch(toggleDialogOpen());
+                dispatch(toggleTaskDialogOpen());
                 // console.log(tasks);
               }}
             >

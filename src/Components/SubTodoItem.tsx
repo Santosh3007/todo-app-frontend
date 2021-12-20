@@ -5,33 +5,26 @@ import Typography from "@mui/material/Typography";
 import { makeStyles } from "@mui/styles";
 import Button from "@mui/material/Button";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { item } from "../Interfaces";
+import { subTask } from "../Interfaces";
 import EditIcon from "@mui/icons-material/Edit";
-import SubTodoItem from "./SubTodoItem";
 import { RootState } from "../Redux/store";
 import { useSelector, useDispatch } from "react-redux";
-import { setTasks } from "../Redux/Misc";
-import { editTask, setTaskInFocus } from "../Redux/NewTaskSlice";
+import { setTasks, setSubtasks } from "../Redux/Misc";
+import { editTask } from "../Redux/NewTaskSlice";
 import Checkbox from "@mui/material/Checkbox";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { toggleSubtaskDialogOpen } from "../Redux/NewTaskSlice";
 
 const useStyles = makeStyles({
   checkBox: {
-    margin: "1em",
+    margin: "0.5em",
   },
   paper: {
-    margin: "1em",
+    margin: "0.7em",
     padding: "1em",
     // textAlign: "justify",
     width: "auto",
   },
   tag: {
-    margin: "1em",
+    margin: "0.5em",
     padding: "0.8em",
     textAlign: "justify",
   },
@@ -50,26 +43,25 @@ const dateFormatter = (date: string | Date) => {
   return dateString + ", " + time;
 };
 
-const TodoItem = (item: item) => {
+const SubTodoItem = (subtask: subTask) => {
   const classes = useStyles();
   const api_url = useSelector((state: RootState) => state.misc.apiUrl);
   const tasks = useSelector((state: RootState) => state.misc.tasks);
   const [open, setOpen] = useState(false);
   const subtasks = useSelector(
     (state: RootState) => state.misc.subtasks
-  ).filter((subtask) => subtask.task_id === item.id);
+  ).filter((subtask) => subtask.task_id === subtask.id);
   const dispatch = useDispatch();
-  const dialogOpen = useSelector(
-    (state: RootState) => state.newTask.subtaskDialogOpen
-  );
 
   const handleDelete = async (id: number) => {
-    let deleteUrl = api_url + `/tasks/${id}`;
+    let deleteUrl = api_url + `/subtasks/${id}`;
     await fetch(deleteUrl, {
       method: "DELETE",
     })
       .then(() => {
-        dispatch(setTasks(tasks.filter((x: item) => x.id !== item.id))); //Removes the deleted element from the state
+        dispatch(
+          setSubtasks(subtasks.filter((x: subTask) => x.id !== subtask.id))
+        ); //Removes the deleted element from the state
       })
       .catch((error) => console.log(error));
   };
@@ -85,7 +77,9 @@ const TodoItem = (item: item) => {
     })
       .then((response) => response.json())
       .then((response) => {
-        dispatch(setTasks(tasks.filter((x) => x.id !== id).concat([response])));
+        dispatch(
+          setSubtasks(subtasks.filter((x) => x.id !== id).concat([response]))
+        );
       })
       .catch((error) => console.log(error));
   };
@@ -93,23 +87,23 @@ const TodoItem = (item: item) => {
   return (
     <>
       <Paper elevation={3} className={classes.paper} sx={{ borderRadius: 20 }}>
-        <Grid container rowSpacing={1} margin={2} alignItems="center">
+        <Grid container rowSpacing={1} margin={0.5} alignItems="center">
           <Checkbox
-            defaultChecked={item.completed}
+            defaultChecked={subtask.completed}
             className={classes.checkBox}
-            onChange={(e) => handleComplete(item.id, e.target.checked)}
+            onChange={(e) => handleComplete(subtask.id, e.target.checked)}
           />
-          <Grid item xs={12} sm container>
+          <Grid item xs={12} md container>
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
-                <Typography gutterBottom variant="h5" component="div">
-                  {item.title}
+                <Typography gutterBottom variant="h6" component="div">
+                  {subtask.title}
                 </Typography>
                 <Typography variant="body2" gutterBottom>
-                  {item.description}
+                  {subtask.description}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {dateFormatter(item.deadline)}
+                  {dateFormatter(subtask.deadline)}
                 </Typography>
               </Grid>
             </Grid>
@@ -120,14 +114,14 @@ const TodoItem = (item: item) => {
               className={classes.tag}
               sx={{ borderRadius: 8, backgroundColor: "#E480F6" }}
             >
-              {item.tag}
+              {subtask.tag}
             </Paper>
           </Grid>
           <Grid item>
             <Button
               color="inherit"
               size="medium"
-              onClick={() => dispatch(editTask(item))} //Sets the newTask state with the existing values in item and opens the dialog
+              onClick={() => dispatch(editTask(subtask))} //Sets the newTask state with the existing values in item and opens the dialog
               startIcon={<EditIcon style={{ color: "primary" }} />}
             ></Button>
           </Grid>
@@ -135,35 +129,14 @@ const TodoItem = (item: item) => {
             <Button
               color="inherit"
               size="medium"
-              onClick={() => handleDelete(item.id)}
+              onClick={() => handleDelete(subtask.id)}
               startIcon={<DeleteOutlineIcon style={{ color: "red" }} />}
             ></Button>
           </Grid>
-          <Grid item>
-            <IconButton onClick={() => setOpen(!open)}>
-              {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </IconButton>
-          </Grid>
         </Grid>
-        <Collapse in={open}>
-          {subtasks.map((subtask) => (
-            <SubTodoItem {...subtask} key={subtask.id} />
-          ))}
-          <IconButton
-            style={{ marginLeft: "3em" }}
-            onClick={() => {
-              dispatch(setTaskInFocus(item.id));
-              console.log("done");
-              dispatch(toggleSubtaskDialogOpen());
-            }}
-          >
-            <AddCircleOutlineIcon style={{ margin: "0.5em" }} />
-            Add new Sub-Task
-          </IconButton>
-        </Collapse>
       </Paper>
     </>
   );
 };
 
-export default TodoItem;
+export default SubTodoItem;

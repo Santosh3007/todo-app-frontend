@@ -20,7 +20,7 @@ import {
   resetTask,
 } from "../Redux/NewTaskSlice";
 import { RootState } from "../Redux/store";
-import { setTasks } from "../Redux/Misc";
+import { setSubtasks } from "../Redux/Misc";
 
 const useStyles = makeStyles({
   nameField: {
@@ -42,7 +42,7 @@ const useStyles = makeStyles({
   addBtn: { margin: "1em" },
 });
 
-const TodoForm = () => {
+const SubtodoForm = () => {
   //Redux State
   const dispatch = useDispatch();
   const title = useSelector((state: RootState) => state.newTask.title);
@@ -51,11 +51,14 @@ const TodoForm = () => {
   );
   const deadline = useSelector((state: RootState) => state.newTask.deadline);
   const dialogOpen = useSelector(
-    (state: RootState) => state.newTask.taskDialogOpen
+    (state: RootState) => state.newTask.subtaskDialogOpen
   );
   const api_url = useSelector((state: RootState) => state.misc.apiUrl);
-  const tasks = useSelector((state: RootState) => state.misc.tasks);
+  const subtasks = useSelector((state: RootState) => state.misc.subtasks);
   const id = useSelector((state: RootState) => state.newTask.id);
+  const taskInFocus = useSelector(
+    (state: RootState) => state.newTask.taskInFocus
+  );
   //Styling
   const classes = useStyles();
 
@@ -66,7 +69,6 @@ const TodoForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(e.target);
     formSubmit(e.target);
   };
 
@@ -82,22 +84,23 @@ const TodoForm = () => {
 
   const formSubmit = async (formData) => {
     let data = new FormData(formData);
-    // console.log(Array.from(data));
+    data.append("subtask[task_id]", taskInFocus.toString());
+    console.log(Array.from(data));
     if (id === -1) {
       //If id===-1, creating new task, else updating existing task
-      await fetch(api_url + "/tasks", {
+      await fetch(api_url + "/subtasks", {
         method: "POST",
         mode: "cors",
         body: data,
       })
         .then((response) => response.json())
         .then((response) => {
-          dispatch(setTasks(tasks.concat([response])));
+          dispatch(setSubtasks(subtasks.concat([response])));
           dispatch(resetTask());
         })
         .catch((error) => console.log(error));
     } else {
-      await fetch(api_url + `/tasks/${id}`, {
+      await fetch(api_url + `/subtasks/${id}`, {
         method: "PATCH",
         mode: "cors",
         body: data,
@@ -105,7 +108,7 @@ const TodoForm = () => {
         .then((response) => response.json())
         .then((response) => {
           dispatch(
-            setTasks(tasks.filter((x) => x.id !== id).concat([response]))
+            setSubtasks(subtasks.filter((x) => x.id !== id).concat([response]))
           );
           dispatch(resetTask());
         })
@@ -128,15 +131,17 @@ const TodoForm = () => {
           },
         }}
       >
-        <DialogTitle>{id === -1 ? "Add a new Task" : "Edit Task"}</DialogTitle>
-        <form onSubmit={handleSubmit} id="task_form" autoComplete="off">
+        <DialogTitle>
+          {id === -1 ? "Add a new SubTask" : "Edit SubTask"}
+        </DialogTitle>
+        <form onSubmit={handleSubmit} id="subtask_form" autoComplete="off">
           <DialogContent>
             <TextField
-              id="task_input"
+              id="subtask_input"
               label="Name"
               variant="outlined"
               type="text"
-              name="task[title]" //Determines Form Data(IMP!)
+              name="subtask[title]" //Determines Form Data(IMP!)
               value={title}
               onChange={handleTaskChange}
             />
@@ -145,7 +150,7 @@ const TodoForm = () => {
               label="Description"
               type="text"
               variant="outlined"
-              name="task[description]" //Determines Form Data(IMP!)
+              name="subtask[description]" //Determines Form Data(IMP!)
               onChange={handleDescriptionChange}
               value={description}
             ></TextField>
@@ -155,7 +160,7 @@ const TodoForm = () => {
                   <TextField
                     id="deadline_input"
                     type="text"
-                    name="task[deadline]"
+                    name="subtask[deadline]"
                     className={classes.dateTimePicker}
                     {...params}
                   />
@@ -167,7 +172,7 @@ const TodoForm = () => {
                 }}
               />
             </LocalizationProvider>
-            <TagPicker typeOfTask="task" />
+            <TagPicker typeOfTask="subtask" />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} className={classes.cancelBtn}>
@@ -179,7 +184,7 @@ const TodoForm = () => {
               type="submit"
               style={{ height: "100%" }}
             >
-              {id === -1 ? "Add Task" : "Update Task"}
+              {id === -1 ? "Add SubTask" : "Update SubTask"}
             </Button>
           </DialogActions>
         </form>
@@ -188,4 +193,4 @@ const TodoForm = () => {
   );
 };
 
-export default TodoForm;
+export default SubtodoForm;
