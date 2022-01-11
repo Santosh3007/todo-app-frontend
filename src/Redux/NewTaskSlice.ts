@@ -85,6 +85,6 @@ export const newTaskSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { toggleCompleted, setTitle, setDescription, setDeadline, setTag, setTaskInFocus,toggleTaskDialogOpen,toggleSubtaskDialogOpen,resetTask,editTask } = newTaskSlice.actions
+export const { toggleCompleted, setTitle, setDescription, setDeadline, setTag, setTaskInFocus,toggleTaskDialogOpen,toggleSubtaskDialogOpen,resetTask,editTask,editSubtask } = newTaskSlice.actions
 
 export default newTaskSlice.reducer

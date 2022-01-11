@@ -84,10 +84,10 @@ const SubtodoForm = () => {
 
   const formSubmit = async (formData) => {
     let data = new FormData(formData);
-    data.append("subtask[task_id]", taskInFocus.toString());
     console.log(Array.from(data));
     if (id === -1) {
       //If id===-1, creating new task, else updating existing task
+      data.append("subtask[task_id]", taskInFocus.toString());
       await fetch(api_url + "/subtasks", {
         method: "POST",
         mode: "cors",

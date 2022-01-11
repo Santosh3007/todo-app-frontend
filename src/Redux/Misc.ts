@@ -6,12 +6,14 @@ interface miscState  {
   apiUrl: string;
   tasks: item[];
   subtasks: subTask[];
+  searchDialogOpen: boolean;
 }
 
 const initialState:miscState= {
   apiUrl: "http://localhost:3001/api/v1",
   tasks : [],
   subtasks: [],
+  searchDialogOpen: false,
 }
 
 export const newTaskSlice = createSlice({
@@ -24,9 +26,12 @@ export const newTaskSlice = createSlice({
     setSubtasks: (state, action: PayloadAction<subTask[]>) => {
       state.subtasks = action.payload
     },
+    toggleSearchDialog: (state) => {
+      state.searchDialogOpen = !state.searchDialogOpen
+    }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { setTasks, setSubtasks } = newTaskSlice.actions 
+export const { setTasks, setSubtasks, toggleSearchDialog} = newTaskSlice.actions 
 export default newTaskSlice.reducer

@@ -113,13 +113,13 @@ export default function MiniDrawer() {
       case 0:
         return (
           <Link to="/home">
-            <HomeIcon fontSize="large" />;
+            <HomeIcon fontSize="large" />
           </Link>
         );
       case 1:
         return (
           <Link to="/completed">
-            <AssignmentTurnedInIcon fontSize="large" />;
+            <AssignmentTurnedInIcon fontSize="large" />
           </Link>
         );
       case 2:
@@ -134,7 +134,7 @@ export default function MiniDrawer() {
       case 0:
         return (
           <Link to="/account">
-            <ManageAccountsIcon fontSize="large" />;
+            <ManageAccountsIcon fontSize="large" />
           </Link>
         );
       case 1:

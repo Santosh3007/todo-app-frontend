@@ -10,7 +10,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { RootState } from "../Redux/store";
 import { useSelector, useDispatch } from "react-redux";
 import { setTasks, setSubtasks } from "../Redux/Misc";
-import { editTask } from "../Redux/NewTaskSlice";
+import { editSubtask } from "../Redux/NewTaskSlice";
 import Checkbox from "@mui/material/Checkbox";
 
 const useStyles = makeStyles({
@@ -48,9 +48,7 @@ const SubTodoItem = (subtask: subTask) => {
   const api_url = useSelector((state: RootState) => state.misc.apiUrl);
   const tasks = useSelector((state: RootState) => state.misc.tasks);
   const [open, setOpen] = useState(false);
-  const subtasks = useSelector(
-    (state: RootState) => state.misc.subtasks
-  ).filter((subtask) => subtask.task_id === subtask.id);
+  const subtasks = useSelector((state: RootState) => state.misc.subtasks);
   const dispatch = useDispatch();
 
   const handleDelete = async (id: number) => {
@@ -60,14 +58,18 @@ const SubTodoItem = (subtask: subTask) => {
     })
       .then(() => {
         dispatch(
-          setSubtasks(subtasks.filter((x: subTask) => x.id !== subtask.id))
+          setSubtasks(
+            subtasks.filter((x: subTask) => {
+              return x.id !== subtask.id;
+            })
+          )
         ); //Removes the deleted element from the state
       })
       .catch((error) => console.log(error));
   };
 
   const handleComplete = async (id: number, bool: boolean) => {
-    await fetch(api_url + `/tasks/${id}`, {
+    await fetch(api_url + `/subtasks/${id}`, {
       method: "PATCH",
       headers: { "Content-type": "application/json" },
       mode: "cors",
@@ -121,7 +123,7 @@ const SubTodoItem = (subtask: subTask) => {
             <Button
               color="inherit"
               size="medium"
-              onClick={() => dispatch(editTask(subtask))} //Sets the newTask state with the existing values in item and opens the dialog
+              onClick={() => dispatch(editSubtask(subtask))} //Sets the newTask state with the existing values in item and opens the dialog
               startIcon={<EditIcon style={{ color: "primary" }} />}
             ></Button>
           </Grid>
