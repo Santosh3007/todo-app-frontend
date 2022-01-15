@@ -21,6 +21,7 @@ import {
 } from "../Redux/NewTaskSlice";
 import { RootState } from "../Redux/store";
 import { setSubtasks } from "../Redux/Misc";
+import useApi from "../Hooks/useApi";
 
 const useStyles = makeStyles({
   nameField: {
@@ -61,6 +62,7 @@ const SubtodoForm = () => {
   );
   //Styling
   const classes = useStyles();
+  const { authPost, authPatch } = useApi();
 
   //Event handlers
   const handleClose = () => {
@@ -88,11 +90,7 @@ const SubtodoForm = () => {
     if (id === -1) {
       //If id===-1, creating new task, else updating existing task
       data.append("subtask[task_id]", taskInFocus.toString());
-      await fetch(api_url + "/subtasks", {
-        method: "POST",
-        mode: "cors",
-        body: data,
-      })
+      await authPost(api_url + "/subtasks", data)
         .then((response) => response.json())
         .then((response) => {
           dispatch(setSubtasks(subtasks.concat([response])));
@@ -100,11 +98,7 @@ const SubtodoForm = () => {
         })
         .catch((error) => console.log(error));
     } else {
-      await fetch(api_url + `/subtasks/${id}`, {
-        method: "PATCH",
-        mode: "cors",
-        body: data,
-      })
+      await authPatch(api_url + `/subtasks/${id}`, data)
         .then((response) => response.json())
         .then((response) => {
           dispatch(

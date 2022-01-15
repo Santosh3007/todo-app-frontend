@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -22,7 +22,11 @@ import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, Navigate, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../Redux/store";
+import { setIsAuthenticated } from "../Redux/Auth";
+import useAuth from "../Hooks/useAuth";
 
 const drawerWidth = 240;
 
@@ -97,7 +101,12 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+
+  const { checkToken, logout } = useAuth();
+  useEffect(() => {
+    checkToken();
+  }, []);
 
   const handleDrawerOpen = () => {
     // console.log("Hello");
@@ -138,12 +147,19 @@ export default function MiniDrawer() {
           </Link>
         );
       case 1:
-        return <LogoutIcon fontSize="large" />;
+        return (
+          <Link to="/login" onClick={logout}>
+            <LogoutIcon fontSize="large" />;
+          </Link>
+        );
       default:
         return <LogoutIcon fontSize="large" />;
     }
   };
-
+  // if (!isAuthenticated) {
+  //   console.log("redirecting");
+  //   return <Navigate to="/login" />;
+  // }
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />

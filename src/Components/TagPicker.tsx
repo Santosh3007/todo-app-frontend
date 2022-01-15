@@ -19,7 +19,9 @@ export default function TagPicker(props: { typeOfTask: string }) {
   }
 
   const getTasks = () => {
-    fetch(api_url + "/tasks")
+    fetch(api_url + "/tasks", {
+      headers: { Authorization: `${localStorage.getItem("token")}` },
+    })
       .then((response) => response.json())
       .then((response_items: item[]) => {
         setTags(

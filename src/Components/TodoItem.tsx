@@ -19,6 +19,7 @@ import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { toggleSubtaskDialogOpen } from "../Redux/NewTaskSlice";
+import useApi from "../Hooks/useApi";
 
 const useStyles = makeStyles({
   checkBox: {
@@ -62,27 +63,24 @@ const TodoItem = (item: item) => {
   const dialogOpen = useSelector(
     (state: RootState) => state.newTask.subtaskDialogOpen
   );
+  const { authPatch, authDelete } = useApi();
 
   const handleDelete = async (id: number) => {
     let deleteUrl = api_url + `/tasks/${id}`;
-    await fetch(deleteUrl, {
-      method: "DELETE",
-    })
-      .then(() => {
+    await authDelete(deleteUrl)
+      .then((response) => {
         dispatch(setTasks(tasks.filter((x: item) => x.id !== item.id))); //Removes the deleted element from the state
       })
       .catch((error) => console.log(error));
   };
 
   const handleComplete = async (id: number, bool: boolean) => {
-    await fetch(api_url + `/tasks/${id}`, {
-      method: "PATCH",
-      headers: { "Content-type": "application/json" },
-      mode: "cors",
-      body: JSON.stringify({
+    await authPatch(
+      api_url + `/tasks/${id}`,
+      JSON.stringify({
         completed: bool,
-      }),
-    })
+      })
+    )
       .then((response) => response.json())
       .then((response) => {
         dispatch(setTasks(tasks.filter((x) => x.id !== id).concat([response])));

@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setTasks, setSubtasks } from "../Redux/Misc";
 import { editSubtask } from "../Redux/NewTaskSlice";
 import Checkbox from "@mui/material/Checkbox";
+import useApi from "../Hooks/useApi";
 
 const useStyles = makeStyles({
   checkBox: {
@@ -50,12 +51,11 @@ const SubTodoItem = (subtask: subTask) => {
   const [open, setOpen] = useState(false);
   const subtasks = useSelector((state: RootState) => state.misc.subtasks);
   const dispatch = useDispatch();
+  const { authDelete, authPatch } = useApi();
 
   const handleDelete = async (id: number) => {
     let deleteUrl = api_url + `/subtasks/${id}`;
-    await fetch(deleteUrl, {
-      method: "DELETE",
-    })
+    await authDelete(deleteUrl)
       .then(() => {
         dispatch(
           setSubtasks(
@@ -69,14 +69,12 @@ const SubTodoItem = (subtask: subTask) => {
   };
 
   const handleComplete = async (id: number, bool: boolean) => {
-    await fetch(api_url + `/subtasks/${id}`, {
-      method: "PATCH",
-      headers: { "Content-type": "application/json" },
-      mode: "cors",
-      body: JSON.stringify({
+    await authPatch(
+      api_url + `/subtasks/${id}`,
+      JSON.stringify({
         completed: bool,
-      }),
-    })
+      })
+    )
       .then((response) => response.json())
       .then((response) => {
         dispatch(

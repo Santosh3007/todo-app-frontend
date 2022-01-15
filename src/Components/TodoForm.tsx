@@ -21,6 +21,7 @@ import {
 } from "../Redux/NewTaskSlice";
 import { RootState } from "../Redux/store";
 import { setTasks } from "../Redux/Misc";
+import useApi from "../Hooks/useApi";
 
 const useStyles = makeStyles({
   nameField: {
@@ -58,6 +59,7 @@ const TodoForm = () => {
   const id = useSelector((state: RootState) => state.newTask.id);
   //Styling
   const classes = useStyles();
+  const { authPost, authPatch } = useApi();
 
   //Event handlers
   const handleClose = () => {
@@ -85,11 +87,7 @@ const TodoForm = () => {
     // console.log(Array.from(data));
     if (id === -1) {
       //If id===-1, creating new task, else updating existing task
-      await fetch(api_url + "/tasks", {
-        method: "POST",
-        mode: "cors",
-        body: data,
-      })
+      await authPost(api_url + "/tasks", data)
         .then((response) => response.json())
         .then((response) => {
           dispatch(setTasks(tasks.concat([response])));
@@ -97,13 +95,10 @@ const TodoForm = () => {
         })
         .catch((error) => console.log(error));
     } else {
-      await fetch(api_url + `/tasks/${id}`, {
-        method: "PATCH",
-        mode: "cors",
-        body: data,
-      })
+      await authPatch(api_url + `/tasks/${id}`, data)
         .then((response) => response.json())
         .then((response) => {
+          console.log(response);
           dispatch(
             setTasks(tasks.filter((x) => x.id !== id).concat([response]))
           );

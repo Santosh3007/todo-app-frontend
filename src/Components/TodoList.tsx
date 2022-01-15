@@ -3,6 +3,7 @@ import TodoItem from "./TodoItem";
 import Grid from "@mui/material/Grid";
 import TodoForm from "./TodoForm";
 import SubTodoForm from "./SubtodoForm";
+import useApi from "../Hooks/useApi";
 
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -19,6 +20,7 @@ import DateTimePicker from "@mui/lab/DateTimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import Button from "@mui/material/Button";
+import { Link, Outlet, Navigate } from "react-router-dom";
 
 import { item, subTask } from "../Interfaces";
 import { useDispatch, useSelector } from "react-redux";
@@ -50,6 +52,7 @@ const TodoList = (props: { completed: boolean }) => {
   const [searchTags, setSearchTags] = useState<string[]>([]);
   const [order, setOrder] = React.useState("");
   const [isFilteredTasks, setIsFilteredTasks] = useState(false); // To check if tasks are filtered
+  const { authFetch } = useApi();
 
   useEffect(() => {
     getTasks();
@@ -58,13 +61,19 @@ const TodoList = (props: { completed: boolean }) => {
   const dispatch = useDispatch();
 
   const getTasks = () => {
-    fetch(api_url + "/tasks")
-      .then((response) => response.json())
+    authFetch(api_url + "/tasks")
+      .then((response) => {
+        if (response.status === 401) {
+          <Navigate to="/login" />;
+        }
+        return response.json();
+      })
       .then((response_items: item[]) => {
         dispatch(setTasks(response_items.sort(compare)));
       })
       .catch((error) => console.log(error));
-    fetch(api_url + "/subtasks")
+
+    authFetch(api_url + "/subtasks")
       .then((response) => response.json())
       .then((response_items: subTask[]) => {
         dispatch(setSubtasks(response_items.sort(compare)));
@@ -134,9 +143,6 @@ const TodoList = (props: { completed: boolean }) => {
   return (
     <div>
       <Grid container>
-        <Grid item xs={2}>
-          <MiniDrawer />
-        </Grid>
         <Grid item xs={12}>
           <TextField
             id="outlined-search"
@@ -291,6 +297,7 @@ const TodoList = (props: { completed: boolean }) => {
         <Grid item>
           <ul>
             {tasks
+              .sort(compare)
               .filter((task) =>
                 task.title.toLowerCase().includes(searchText.toLowerCase())
               )
