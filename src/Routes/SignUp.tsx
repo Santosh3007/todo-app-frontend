@@ -39,21 +39,18 @@ const SignUp = () => {
   const formSubmit = async (formData) => {
     let data = new FormData(formData);
     console.log(Array.from(data));
-    await fetch("http://localhost:3001/authenticate", {
+    await fetch("http://localhost:3001/users", {
       method: "POST",
       mode: "cors",
       body: data,
     })
       .then((response) => {
-        if (response.status === 401) {
-          dispatch(setIsAuthenticated(false));
-        }
         console.log(response);
         return response.json();
       })
       .then((response) => {
-        localStorage.setItem("token", response.auth_token);
         if (response.auth_token) {
+          localStorage.setItem("token", response.auth_token);
           dispatch(setIsAuthenticated(true));
           navigate("/home");
         }
@@ -87,7 +84,7 @@ const SignUp = () => {
                 <TextField
                   value={username}
                   label="Username"
-                  name="username"
+                  name="user[name]"
                   onChange={(e) => {
                     e.preventDefault();
                     setUsername(e.target.value);
@@ -99,7 +96,7 @@ const SignUp = () => {
                 <TextField
                   value={email}
                   label="Email"
-                  name="email"
+                  name="user[email]"
                   onChange={(e) => {
                     e.preventDefault();
                     setEmail(e.target.value);
@@ -113,7 +110,7 @@ const SignUp = () => {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   label="Password"
-                  name="password"
+                  name="user[password]"
                   onChange={(e) => {
                     e.preventDefault();
                     setPassword(e.target.value);
@@ -138,10 +135,10 @@ const SignUp = () => {
                 <TextField
                   error={!isPasswordMatch}
                   helperText={!isPasswordMatch ? "Passwords do not match." : ""}
-                  id="outlined-adornment-password"
+                  id="outlined-adornment-passwordcfm"
                   type={showPassword ? "text" : "password"}
                   value={passwordCfm}
-                  name="password_confirmation"
+                  name="user[password_confirmation]"
                   onChange={(e) => {
                     e.preventDefault();
                     setPasswordCfm(e.target.value);

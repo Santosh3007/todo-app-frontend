@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -20,6 +20,7 @@ import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { toggleSubtaskDialogOpen } from "../Redux/NewTaskSlice";
 import useApi from "../Hooks/useApi";
+import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
 
 const useStyles = makeStyles({
   checkBox: {
@@ -65,6 +66,9 @@ const TodoItem = (item: item) => {
   );
   const { authPatch, authDelete } = useApi();
 
+  const isOverdue =
+    new Date(item.deadline).getTime() - 28800000 - new Date().getTime() < 0;
+
   const handleDelete = async (id: number) => {
     let deleteUrl = api_url + `/tasks/${id}`;
     await authDelete(deleteUrl)
@@ -103,12 +107,30 @@ const TodoItem = (item: item) => {
                 <Typography gutterBottom variant="h5" component="div">
                   {item.title}
                 </Typography>
-                <Typography variant="body2" gutterBottom>
+                <Typography
+                  variant="body2"
+                  gutterBottom
+                  style={{ marginBottom: "0.4em" }}
+                >
                   {item.description}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {dateFormatter(item.deadline)}
-                </Typography>
+                <Grid container direction="row" alignItems="center">
+                  {isOverdue && (
+                    <Grid item>
+                      <WarningAmberOutlinedIcon
+                        style={{ marginRight: "0.2em", color: "red" }}
+                      />
+                    </Grid>
+                  )}
+                  <Grid item>
+                    <Typography
+                      variant="body2"
+                      color={isOverdue ? "red" : "text.secondary"} //To check if Task is overdue
+                    >
+                      {dateFormatter(item.deadline)}
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>

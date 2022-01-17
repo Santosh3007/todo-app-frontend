@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsAuthenticated, setUsername, setEmail } from "../Redux/Auth";
-import { Link, Outlet, Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RootState } from "../Redux/store";
 
 const useAuth = () => {
@@ -41,16 +41,18 @@ const useAuth = () => {
       await fetch("http://localhost:3001/authorize", {
         method: "POST",
         headers: { Authorization: `${localStorage.getItem("token")}` },
-      }).then((response) => {
-        response.json().then((response) => console.log(response));
-        if (response.status === 200) {
-          dispatch(setIsAuthenticated(true));
-          return true;
-        } else if (response.status === 401) {
-          logout();
-          navigate("/login");
-        }
-      });
+      })
+        .then((response) => {
+          response.json().then((response) => console.log(response));
+          if (response.status === 200) {
+            dispatch(setIsAuthenticated(true));
+            return true;
+          } else if (response.status === 401) {
+            logout();
+            navigate("/login");
+          }
+        })
+        .catch((error) => console.log(error));
     } else {
       navigate("/login");
     }

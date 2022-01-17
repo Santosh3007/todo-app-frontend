@@ -17,15 +17,11 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Link, Outlet, Navigate, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../Redux/store";
-import { setIsAuthenticated } from "../Redux/Auth";
+import { Link, Outlet } from "react-router-dom";
 import useAuth from "../Hooks/useAuth";
 
 const drawerWidth = 240;
@@ -127,12 +123,16 @@ export default function MiniDrawer() {
         );
       case 1:
         return (
+          <Link to="/home">
+            <ListAltOutlinedIcon fontSize="large" />
+          </Link>
+        );
+      case 2:
+        return (
           <Link to="/completed">
             <AssignmentTurnedInIcon fontSize="large" />
           </Link>
         );
-      case 2:
-        return <DeleteSweepIcon fontSize="large" />;
       default:
         return <InboxIcon fontSize="large" />;
     }
@@ -205,7 +205,7 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Home", "Completed", "Deleted"].map((text, index) => (
+          {["Home", "Upcoming Tasks", "Completed"].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>{iconListTop(index)}</ListItemIcon>
               <ListItemText primary={text} />
