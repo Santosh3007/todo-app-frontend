@@ -1,37 +1,38 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import {item, subTask} from '../Interfaces';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { item, subTask } from "../Interfaces";
 
-
-interface miscState  {
+interface miscState {
   apiUrl: string;
   tasks: item[];
   subtasks: subTask[];
   searchDialogOpen: boolean;
 }
 
-const initialState:miscState= {
-  apiUrl: "http://localhost:3001/api/v1",
-  tasks : [],
+const initialState: miscState = {
+  apiUrl:
+    "http://todo-api-env.eba-xaznfkbj.ap-southeast-1.elasticbeanstalk.com/api/v1",
+  tasks: [],
   subtasks: [],
   searchDialogOpen: false,
-}
+};
 
 export const newTaskSlice = createSlice({
-  name: 'misc',
+  name: "misc",
   initialState,
   reducers: {
     setTasks: (state, action: PayloadAction<item[]>) => {
-      state.tasks = action.payload
+      state.tasks = action.payload;
     },
     setSubtasks: (state, action: PayloadAction<subTask[]>) => {
-      state.subtasks = action.payload
+      state.subtasks = action.payload;
     },
     toggleSearchDialog: (state) => {
-      state.searchDialogOpen = !state.searchDialogOpen
-    }
+      state.searchDialogOpen = !state.searchDialogOpen;
+    },
   },
-})
+});
 
 // Action creators are generated for each case reducer function
-export const { setTasks, setSubtasks, toggleSearchDialog} = newTaskSlice.actions 
-export default newTaskSlice.reducer
+export const { setTasks, setSubtasks, toggleSearchDialog } =
+  newTaskSlice.actions;
+export default newTaskSlice.reducer;

@@ -39,11 +39,14 @@ const SignUp = () => {
   const formSubmit = async (formData) => {
     let data = new FormData(formData);
     console.log(Array.from(data));
-    await fetch("http://localhost:3001/users", {
-      method: "POST",
-      mode: "cors",
-      body: data,
-    })
+    await fetch(
+      "http://todo-api-env.eba-xaznfkbj.ap-southeast-1.elasticbeanstalk.com/users",
+      {
+        method: "POST",
+        mode: "cors",
+        body: data,
+      }
+    )
       .then((response) => {
         console.log(response);
         return response.json();

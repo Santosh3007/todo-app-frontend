@@ -9,7 +9,8 @@ interface miscState {
 }
 
 const initialState: miscState = {
-  apiUrl: "http://localhost:3001/api/v1",
+  apiUrl:
+    "http://todo-api-env.eba-xaznfkbj.ap-southeast-1.elasticbeanstalk.com/api/v1",
   isAuthenticated: false,
   username: "",
   email: "",
