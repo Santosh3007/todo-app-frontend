@@ -5,6 +5,7 @@ import { item } from "../Interfaces";
 import { useSelector, useDispatch } from "react-redux";
 import { setTag } from "../Redux/NewTaskSlice";
 import { RootState } from "../Redux/store";
+import { setErrorSnackbar } from "../Redux/Misc";
 
 const filter = createFilterOptions<TagOptionType>();
 
@@ -36,7 +37,7 @@ export default function TagPicker(props: { typeOfTask: string }) {
             })
         );
       })
-      .catch((error) => console.log(error));
+      .catch((error) => dispatch(setErrorSnackbar()));
   };
 
   useEffect(() => {

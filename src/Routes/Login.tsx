@@ -11,6 +11,8 @@ import { useSelector, useDispatch } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import { RootState } from "../Redux/store";
 import { setIsAuthenticated } from "../Redux/Auth";
+import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
+import useAuth from "../Hooks/useAuth";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,6 +23,7 @@ const Login = () => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+  const { checkToken } = useAuth();
 
   const dispatch = useDispatch();
 
@@ -49,29 +52,44 @@ const Login = () => {
         if (response.status === 401) {
           setIsInValid(true);
           dispatch(setIsAuthenticated(false));
+          dispatch(
+            setCustomSnackbar({
+              message: "Invalid Credentials! Please Try Again.",
+              type: "error",
+            })
+          );
         }
         console.log(response);
-        return response.json();
+        return response.status >= 400
+          ? Promise.reject("error")
+          : response.json();
       })
       .then((response) => {
+        console.log(response);
         localStorage.setItem("token", response.auth_token);
         if (response.auth_token) {
           dispatch(setIsAuthenticated(true));
+          checkToken();
+          dispatch(
+            setCustomSnackbar({
+              message: "Login Success!",
+              type: "success",
+            })
+          );
           navigate("/home");
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => dispatch(setErrorSnackbar()));
   };
   return (
     <>
-      <Outlet />
       <Grid
         container
         spacing={0}
         alignItems="center"
         style={{
           minHeight: "100vh",
-          minWidth: "93%", //100% make it once it is alone without drawer
+          minWidth: "100%",
           display: "flex",
           justifyContent: "center",
         }}
@@ -137,7 +155,7 @@ const Login = () => {
                   Login
                 </Button>
               </Grid>
-              <Grid item>
+              <Grid item style={{ margin: "1rem" }}>
                 <Link to="/signup">Don't have an account?</Link>
               </Grid>
             </Grid>

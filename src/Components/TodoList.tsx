@@ -11,7 +11,6 @@ import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -20,14 +19,14 @@ import DateTimePicker from "@mui/lab/DateTimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import Button from "@mui/material/Button";
-import { Link, Outlet, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import { item, subTask } from "../Interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTaskDialogOpen } from "../Redux/NewTaskSlice";
 import { setTasks, setSubtasks } from "../Redux/Misc";
-import MiniDrawer from "../Drawer/Drawer";
 import { RootState } from "../Redux/store";
+import { setErrorSnackbar } from "../Redux/Misc";
 
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
 
@@ -71,7 +70,7 @@ const TodoList = (props: { completed: boolean }) => {
       .then((response_items: item[]) => {
         dispatch(setTasks(response_items.sort(compare)));
       })
-      .catch((error) => console.log(error));
+      .catch((error) => dispatch(setErrorSnackbar()));
 
     authFetch(api_url + "/subtasks")
       .then((response) => response.json())
@@ -328,8 +327,3 @@ const TodoList = (props: { completed: boolean }) => {
 };
 
 export default TodoList;
-
-const top100Films = [
-  { title: "The Shawshank Redemption", year: 1994 },
-  { title: "The Godfather", year: 1972 },
-];

@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsAuthenticated, setUsername, setEmail } from "../Redux/Auth";
+import {
+  setIsAuthenticated,
+  setUsername,
+  setEmail,
+  setUserId,
+} from "../Redux/Auth";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../Redux/store";
+import { setErrorSnackbar } from "../Redux/Misc";
 
 const useAuth = () => {
   const dispatch = useDispatch();
@@ -10,20 +16,6 @@ const useAuth = () => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
-  // useEffect(() => {
-  //   if (localStorage.getItem("token")) {
-  //     fetch("http://localhost:3001/authorize", {
-  //       method: "POST",
-  //       headers: { Authorization: `${localStorage.getItem("token")}` },
-  //     }).then((response) => {
-  //       if (response.status === 200) {
-  //         dispatch(setIsAuthenticated(true));
-
-  //         setRes(true);
-  //       }
-  //     });
-  //   }
-  // });
 
   const logout = () => {
     dispatch(setIsAuthenticated(false));
@@ -46,16 +38,20 @@ const useAuth = () => {
         }
       )
         .then((response) => {
-          response.json().then((response) => console.log(response));
           if (response.status === 200) {
-            dispatch(setIsAuthenticated(true));
+            response.json().then((response) => {
+              dispatch(setIsAuthenticated(true));
+              dispatch(setUsername(response.user.name));
+              dispatch(setEmail(response.user.email));
+              dispatch(setUserId(response.user.id));
+            });
             return true;
           } else if (response.status === 401) {
             logout();
             navigate("/login");
           }
         })
-        .catch((error) => console.log(error));
+        .catch((error) => dispatch(setErrorSnackbar()));
     } else {
       navigate("/login");
     }

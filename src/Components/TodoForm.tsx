@@ -22,6 +22,7 @@ import {
 import { RootState } from "../Redux/store";
 import { setTasks } from "../Redux/Misc";
 import useApi from "../Hooks/useApi";
+import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
 
 const useStyles = makeStyles({
   nameField: {
@@ -87,13 +88,20 @@ const TodoForm = () => {
     // console.log(Array.from(data));
     if (id === -1) {
       //If id===-1, creating new task, else updating existing task
-      await authPost(api_url + "/tasks", data)
+      await authPost(api_url + "/tass", data)
         .then((response) => response.json())
         .then((response) => {
+          console.log(response);
           dispatch(setTasks(tasks.concat([response])));
           dispatch(resetTask());
+          dispatch(
+            setCustomSnackbar({
+              message: "Task Created Successfully!",
+              type: "success",
+            })
+          );
         })
-        .catch((error) => console.log(error));
+        .catch((error) => dispatch(setErrorSnackbar()));
     } else {
       await authPatch(api_url + `/tasks/${id}`, data)
         .then((response) => response.json())
@@ -103,8 +111,14 @@ const TodoForm = () => {
             setTasks(tasks.filter((x) => x.id !== id).concat([response]))
           );
           dispatch(resetTask());
+          dispatch(
+            setCustomSnackbar({
+              message: "Task Updated Successfully!",
+              type: "success",
+            })
+          );
         })
-        .catch((error) => console.log(error));
+        .catch((error) => dispatch(setErrorSnackbar()));
     }
   };
 

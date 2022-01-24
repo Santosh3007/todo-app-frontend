@@ -2,9 +2,6 @@ import { Route, Navigate, RouteProps } from "react-router-dom";
 import { RootState } from "../Redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import Login from "../Routes/Login";
-import { setIsAuthenticated } from "../Redux/Auth";
-import React, { useEffect } from "react";
-import { render } from "@testing-library/react";
 import useAuth from "../Hooks/useAuth";
 export { PrivateRoute };
 

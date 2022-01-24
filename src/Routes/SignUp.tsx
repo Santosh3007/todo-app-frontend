@@ -6,28 +6,31 @@ import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import { RootState } from "../Redux/store";
 import { setIsAuthenticated } from "../Redux/Auth";
+import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showCfmPassword, setShowCfmPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCfm, setPasswordCfm] = useState("");
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const navigate = useNavigate();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
-  );
 
   const dispatch = useDispatch();
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleClickShowCfmPassword = () => {
+    setShowPassword(!showCfmPassword);
   };
 
   const handleSubmit = (e) => {
@@ -49,16 +52,24 @@ const SignUp = () => {
     )
       .then((response) => {
         console.log(response);
-        return response.json();
+        return response.status >= 400
+          ? Promise.reject("error")
+          : response.json();
       })
       .then((response) => {
         if (response.auth_token) {
           localStorage.setItem("token", response.auth_token);
           dispatch(setIsAuthenticated(true));
+          dispatch(
+            setCustomSnackbar({
+              message: "Account Created Successfully!",
+              type: "success",
+            })
+          );
           navigate("/home");
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => dispatch(setErrorSnackbar()));
   };
   return (
     <>
@@ -139,7 +150,7 @@ const SignUp = () => {
                   error={!isPasswordMatch}
                   helperText={!isPasswordMatch ? "Passwords do not match." : ""}
                   id="outlined-adornment-passwordcfm"
-                  type={showPassword ? "text" : "password"}
+                  type={showCfmPassword ? "text" : "password"}
                   value={passwordCfm}
                   name="user[password_confirmation]"
                   onChange={(e) => {
@@ -152,7 +163,7 @@ const SignUp = () => {
                       <InputAdornment position="end">
                         <IconButton
                           aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
+                          onClick={handleClickShowCfmPassword}
                           edge="end"
                         >
                           {showPassword ? <VisibilityOff /> : <Visibility />}

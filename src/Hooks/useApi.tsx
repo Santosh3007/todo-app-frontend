@@ -1,4 +1,3 @@
-import React from "react";
 import useAuth from "./useAuth";
 
 const useApi = () => {
@@ -9,7 +8,7 @@ const useApi = () => {
       headers: { Authorization: `${localStorage.getItem("token")}` },
     });
     response.status === 401 && logout();
-    return response;
+    return response.status >= 400 ? Promise.reject("error") : response;
   };
 
   const authPost = async (api_url: string, data: FormData) => {
@@ -20,7 +19,7 @@ const useApi = () => {
       headers: { Authorization: `${localStorage.getItem("token")}` },
     });
     response.status === 401 && logout();
-    return response;
+    return response.status >= 400 ? Promise.reject("error") : response;
   };
 
   const authPatch = async (api_url: string, data: FormData | string) => {
@@ -36,7 +35,7 @@ const useApi = () => {
         },
       });
       response.status === 401 && logout();
-      return response;
+      return response.status >= 400 ? Promise.reject("error") : response;
     } else {
       const response = await fetch(api_url, {
         method: "PATCH",
@@ -47,7 +46,7 @@ const useApi = () => {
         },
       });
       response.status === 401 && logout();
-      return response;
+      return response.status >= 400 ? Promise.reject("error") : response;
     }
   };
 
@@ -57,7 +56,7 @@ const useApi = () => {
       headers: { Authorization: `${localStorage.getItem("token")}` },
     });
     response.status === 401 && logout();
-    return response;
+    return response.status >= 400 ? Promise.reject("error") : response;
   };
 
   return { authFetch, authPost, authPatch, authDelete };

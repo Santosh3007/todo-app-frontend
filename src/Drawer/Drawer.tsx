@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import Grid from "@mui/material/Grid";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import HomeIcon from "@mui/icons-material/Home";
@@ -23,6 +21,7 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link, Outlet } from "react-router-dom";
 import useAuth from "../Hooks/useAuth";
+import CustomSnackbar from "../Components/CustomSnackbar";
 
 const drawerWidth = 240;
 
@@ -56,28 +55,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -105,7 +82,6 @@ export default function MiniDrawer() {
   }, []);
 
   const handleDrawerOpen = () => {
-    // console.log("Hello");
     setOpen(true);
   };
 
@@ -118,23 +94,23 @@ export default function MiniDrawer() {
       case 0:
         return (
           <Link to="/home">
-            <HomeIcon fontSize="large" />
+            <HomeIcon style={{ fontSize: "300%" }} />
           </Link>
         );
       case 1:
         return (
-          <Link to="/home">
-            <ListAltOutlinedIcon fontSize="large" />
+          <Link to="/tasks">
+            <ListAltOutlinedIcon style={{ fontSize: "300%" }} />
           </Link>
         );
       case 2:
         return (
           <Link to="/completed">
-            <AssignmentTurnedInIcon fontSize="large" />
+            <AssignmentTurnedInIcon style={{ fontSize: "300%" }} />
           </Link>
         );
       default:
-        return <InboxIcon fontSize="large" />;
+        return <InboxIcon style={{ fontSize: "300%" }} />;
     }
   };
 
@@ -143,86 +119,74 @@ export default function MiniDrawer() {
       case 0:
         return (
           <Link to="/account">
-            <ManageAccountsIcon fontSize="large" />
+            <ManageAccountsIcon style={{ fontSize: "300%" }} />
           </Link>
         );
       case 1:
         return (
           <Link to="/login" onClick={logout}>
-            <LogoutIcon fontSize="large" />;
+            <LogoutIcon style={{ fontSize: "300%" }} />;
           </Link>
         );
       default:
-        return <LogoutIcon fontSize="large" />;
+        return <LogoutIcon style={{ fontSize: "300%" }} />;
     }
   };
-  // if (!isAuthenticated) {
-  //   console.log("redirecting");
-  //   return <Navigate to="/login" />;
-  // }
+
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      {/* <AppBar position="fixed" open={open}>
-      <Toolbar>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          onClick={handleDrawerOpen}
-          edge="start"
-          sx={{
-            marginRight: "36px",
-            ...(open && { display: "none" }),
-          }}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
-          </Typography>
-      </Toolbar>
-      </AppBar> */}
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          {open ? (
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "rtl" ? (
-                <ChevronRightIcon />
-              ) : (
-                <ChevronLeftIcon />
-              )}
-            </IconButton>
-          ) : (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {["Home", "Upcoming Tasks", "Completed"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{iconListTop(index)}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {["Account", "Log Out"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{iconListBottom(index)}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <Outlet />
-    </Box>
+    <>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <Drawer variant="permanent" open={open}>
+          <DrawerHeader>
+            {open ? (
+              <IconButton onClick={handleDrawerClose}>
+                {theme.direction === "rtl" ? (
+                  <ChevronRightIcon />
+                ) : (
+                  <ChevronLeftIcon />
+                )}
+              </IconButton>
+            ) : (
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+              >
+                <MenuIcon fontSize="large" />
+              </IconButton>
+            )}
+          </DrawerHeader>
+          <Divider />
+          <List style={{ justifyContent: "center" }}>
+            {["Home", "Upcoming Tasks", "Completed"].map((text, index) => (
+              <ListItem button key={text} style={{ justifyContent: "center" }}>
+                <ListItemIcon
+                  style={{ marginRight: "1rem", marginLeft: "1rem" }}
+                >
+                  {iconListTop(index)}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+          <List style={{ position: "absolute", bottom: "0px" }}>
+            <Divider />
+            {["Account", "Log Out"].map((text, index) => (
+              <ListItem button key={text} style={{ justifyContent: "center" }}>
+                <ListItemIcon style={{ marginRight: "1rem" }}>
+                  {iconListBottom(index)}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+        <Outlet />
+        <CustomSnackbar />
+      </Box>
+    </>
   );
 }

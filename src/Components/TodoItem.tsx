@@ -21,6 +21,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { toggleSubtaskDialogOpen } from "../Redux/NewTaskSlice";
 import useApi from "../Hooks/useApi";
 import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
+import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
 
 const useStyles = makeStyles({
   checkBox: {
@@ -61,9 +62,6 @@ const TodoItem = (item: item) => {
     (state: RootState) => state.misc.subtasks
   ).filter((subtask) => subtask.task_id === item.id);
   const dispatch = useDispatch();
-  const dialogOpen = useSelector(
-    (state: RootState) => state.newTask.subtaskDialogOpen
-  );
   const { authPatch, authDelete } = useApi();
 
   const isOverdue =
@@ -74,8 +72,14 @@ const TodoItem = (item: item) => {
     await authDelete(deleteUrl)
       .then((response) => {
         dispatch(setTasks(tasks.filter((x: item) => x.id !== item.id))); //Removes the deleted element from the state
+        dispatch(
+          setCustomSnackbar({
+            message: "Task Deleted Successfully!",
+            type: "success",
+          })
+        );
       })
-      .catch((error) => console.log(error));
+      .catch((error) => dispatch(setErrorSnackbar()));
   };
 
   const handleComplete = async (id: number, bool: boolean) => {
@@ -88,8 +92,14 @@ const TodoItem = (item: item) => {
       .then((response) => response.json())
       .then((response) => {
         dispatch(setTasks(tasks.filter((x) => x.id !== id).concat([response])));
+        dispatch(
+          setCustomSnackbar({
+            message: "Task Completed Successfully!",
+            type: "success",
+          })
+        );
       })
-      .catch((error) => console.log(error));
+      .catch((error) => dispatch(setErrorSnackbar()));
   };
 
   return (
@@ -138,7 +148,7 @@ const TodoItem = (item: item) => {
             <Paper
               elevation={2}
               className={classes.tag}
-              sx={{ borderRadius: 8, backgroundColor: "#E480F6" }}
+              sx={{ borderRadius: 8, backgroundColor: "#999999" }}
             >
               {item.tag}
             </Paper>

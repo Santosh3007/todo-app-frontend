@@ -22,6 +22,7 @@ import {
 import { RootState } from "../Redux/store";
 import { setSubtasks } from "../Redux/Misc";
 import useApi from "../Hooks/useApi";
+import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
 
 const useStyles = makeStyles({
   nameField: {
@@ -95,8 +96,14 @@ const SubtodoForm = () => {
         .then((response) => {
           dispatch(setSubtasks(subtasks.concat([response])));
           dispatch(resetTask());
+          dispatch(
+            setCustomSnackbar({
+              message: "Subtask Created Successfully!",
+              type: "success",
+            })
+          );
         })
-        .catch((error) => console.log(error));
+        .catch((error) => dispatch(setErrorSnackbar()));
     } else {
       await authPatch(api_url + `/subtasks/${id}`, data)
         .then((response) => response.json())
@@ -105,8 +112,14 @@ const SubtodoForm = () => {
             setSubtasks(subtasks.filter((x) => x.id !== id).concat([response]))
           );
           dispatch(resetTask());
+          dispatch(
+            setCustomSnackbar({
+              message: "Subtask Updated Successfully!",
+              type: "success",
+            })
+          );
         })
-        .catch((error) => console.log(error));
+        .catch((error) => dispatch(setErrorSnackbar()));
     }
   };
 

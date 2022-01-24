@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -9,10 +8,12 @@ import { subTask } from "../Interfaces";
 import EditIcon from "@mui/icons-material/Edit";
 import { RootState } from "../Redux/store";
 import { useSelector, useDispatch } from "react-redux";
-import { setTasks, setSubtasks } from "../Redux/Misc";
+import { setSubtasks } from "../Redux/Misc";
 import { editSubtask } from "../Redux/NewTaskSlice";
 import Checkbox from "@mui/material/Checkbox";
 import useApi from "../Hooks/useApi";
+import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
+import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
 
 const useStyles = makeStyles({
   checkBox: {
@@ -47,11 +48,12 @@ const dateFormatter = (date: string | Date) => {
 const SubTodoItem = (subtask: subTask) => {
   const classes = useStyles();
   const api_url = useSelector((state: RootState) => state.misc.apiUrl);
-  const tasks = useSelector((state: RootState) => state.misc.tasks);
-  const [open, setOpen] = useState(false);
   const subtasks = useSelector((state: RootState) => state.misc.subtasks);
   const dispatch = useDispatch();
   const { authDelete, authPatch } = useApi();
+
+  const isOverdue =
+    new Date(subtask.deadline).getTime() - 28800000 - new Date().getTime() < 0;
 
   const handleDelete = async (id: number) => {
     let deleteUrl = api_url + `/subtasks/${id}`;
@@ -64,8 +66,14 @@ const SubTodoItem = (subtask: subTask) => {
             })
           )
         ); //Removes the deleted element from the state
+        dispatch(
+          setCustomSnackbar({
+            message: "Subtask Deleted Successfully!",
+            type: "success",
+          })
+        );
       })
-      .catch((error) => console.log(error));
+      .catch((error) => dispatch(setErrorSnackbar()));
   };
 
   const handleComplete = async (id: number, bool: boolean) => {
@@ -80,8 +88,14 @@ const SubTodoItem = (subtask: subTask) => {
         dispatch(
           setSubtasks(subtasks.filter((x) => x.id !== id).concat([response]))
         );
+        dispatch(
+          setCustomSnackbar({
+            message: "Subtask Completed Successfully!",
+            type: "success",
+          })
+        );
       })
-      .catch((error) => console.log(error));
+      .catch((error) => dispatch(setErrorSnackbar()));
   };
 
   return (
@@ -102,9 +116,23 @@ const SubTodoItem = (subtask: subTask) => {
                 <Typography variant="body2" gutterBottom>
                   {subtask.description}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {dateFormatter(subtask.deadline)}
-                </Typography>
+                <Grid container direction="row" alignItems="center">
+                  {isOverdue && (
+                    <Grid item>
+                      <WarningAmberOutlinedIcon
+                        style={{ marginRight: "0.2em", color: "red" }}
+                      />
+                    </Grid>
+                  )}
+                  <Grid item>
+                    <Typography
+                      variant="body2"
+                      color={isOverdue ? "red" : "text.secondary"} //To check if Task is overdue
+                    >
+                      {dateFormatter(subtask.deadline)}
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -112,7 +140,7 @@ const SubTodoItem = (subtask: subTask) => {
             <Paper
               elevation={2}
               className={classes.tag}
-              sx={{ borderRadius: 8, backgroundColor: "#E480F6" }}
+              sx={{ borderRadius: 8, backgroundColor: "#999999" }}
             >
               {subtask.tag}
             </Paper>
