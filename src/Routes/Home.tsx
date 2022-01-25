@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import useApi from "../Hooks/useApi";
 import { item, subTask } from "../Interfaces";
 import { setTasks, setSubtasks } from "../Redux/Misc";
-import Image from "../images/logo3.png";
 import { setErrorSnackbar } from "../Redux/Misc";
 
 const Home = () => {
@@ -41,7 +40,12 @@ const Home = () => {
 
   return (
     <>
-      <Grid container alignItems={"center"} alignContent={"justify"}>
+      <Grid
+        container
+        alignItems={"center"}
+        alignContent={"justify"}
+        style={{ backgroundColor: "#d8e2dc" }}
+      >
         <Grid item xs={10} alignContent="center">
           <Typography
             variant="h3"
@@ -61,7 +65,7 @@ const Home = () => {
               marginRight: "1rem",
               textAlign: "center",
               fontFamily: "Merriweather",
-              backgroundColor: "#ffff80",
+              backgroundColor: "#f1e9da",
               borderRadius: "1.2rem",
               padding: "0.5rem",
             }}

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-// import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -26,22 +26,23 @@ import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
 
 const useStyles = makeStyles({
   nameField: {
-    margin: "1em",
+    margin: "0.5em",
   },
   descriptionField: {
-    margin: "1em",
+    margin: "0.5em",
+    width: "400px",
+    heigh: "100px",
   },
   dateTimePicker: {
-    margin: "1em",
-    padding: "2em",
+    margin: "0.5em",
     size: "auto",
     textAlign: "justify",
-    width: 300,
+    width: "230px",
   },
   cancelBtn: {
-    margin: "1em",
+    margin: "0.5em",
   },
-  addBtn: { margin: "1em" },
+  addBtn: { margin: "0.5em" },
 });
 
 const SubtodoForm = () => {
@@ -87,7 +88,6 @@ const SubtodoForm = () => {
 
   const formSubmit = async (formData) => {
     let data = new FormData(formData);
-    console.log(Array.from(data));
     if (id === -1) {
       //If id===-1, creating new task, else updating existing task
       data.append("subtask[task_id]", taskInFocus.toString());
@@ -143,43 +143,57 @@ const SubtodoForm = () => {
         </DialogTitle>
         <form onSubmit={handleSubmit} id="subtask_form" autoComplete="off">
           <DialogContent>
-            <TextField
-              id="subtask_input"
-              label="Name"
-              variant="outlined"
-              type="text"
-              name="subtask[title]" //Determines Form Data(IMP!)
-              value={title}
-              onChange={handleTaskChange}
-            />
-            <TextField
-              id="description_input"
-              label="Description"
-              type="text"
-              variant="outlined"
-              name="subtask[description]" //Determines Form Data(IMP!)
-              onChange={handleDescriptionChange}
-              value={description}
-            ></TextField>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DateTimePicker
-                renderInput={(params) => (
-                  <TextField
-                    id="deadline_input"
-                    type="text"
-                    name="subtask[deadline]"
-                    className={classes.dateTimePicker}
-                    {...params}
+            <Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="subtask_input"
+                  label="Name"
+                  variant="outlined"
+                  type="text"
+                  name="subtask[title]" //Determines Form Data(IMP!)
+                  value={title}
+                  className={classes.nameField}
+                  onChange={handleTaskChange}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  id="description_input"
+                  label="Description"
+                  type="text"
+                  className={classes.descriptionField}
+                  variant="outlined"
+                  name="subtask[description]" //Determines Form Data(IMP!)
+                  onChange={handleDescriptionChange}
+                  value={description}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DateTimePicker
+                    renderInput={(params) => (
+                      <TextField
+                        id="deadline_input"
+                        type="text"
+                        name="subtask[deadline]"
+                        className={classes.dateTimePicker}
+                        {...params}
+                      />
+                    )}
+                    value={deadline}
+                    inputFormat="dd/MM/yyyy hh:mm a"
+                    onChange={(newDate: Date | null) => {
+                      newDate && dispatch(setDeadline(newDate));
+                    }}
                   />
-                )}
-                value={deadline}
-                inputFormat="dd/MM/yyyy hh:mm a"
-                onChange={(newDate: Date | null) => {
-                  newDate && dispatch(setDeadline(newDate));
-                }}
-              />
-            </LocalizationProvider>
-            <TagPicker typeOfTask="subtask" />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12}>
+                <TagPicker typeOfTask="subtask" />
+              </Grid>
+            </Grid>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} className={classes.cancelBtn}>

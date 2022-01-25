@@ -12,6 +12,9 @@ import IconButton from "@mui/material/IconButton";
 import { RootState } from "../Redux/store";
 import { setIsAuthenticated } from "../Redux/Auth";
 import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
+import background from "../images/background.jpg";
+import logo from "../images/logo1.png";
+import { Typography } from "@mui/material";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,13 +38,11 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(e.target);
     formSubmit(e.target);
   };
 
   const formSubmit = async (formData) => {
     let data = new FormData(formData);
-    console.log(Array.from(data));
     await fetch(
       "http://todo-api-env.eba-xaznfkbj.ap-southeast-1.elasticbeanstalk.com/users",
       {
@@ -51,7 +52,6 @@ const SignUp = () => {
       }
     )
       .then((response) => {
-        console.log(response);
         return response.status >= 400
           ? Promise.reject("error")
           : response.json();
@@ -73,16 +73,20 @@ const SignUp = () => {
   };
   return (
     <>
-      <Outlet />
       <Grid
         container
         spacing={0}
         alignItems="center"
         style={{
           minHeight: "100vh",
-          minWidth: "93%", //100% make it once it is alone without drawer
+          minWidth: "100%",
           display: "flex",
           justifyContent: "center",
+          backgroundImage: `url(${background})`,
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundColor: "black",
         }}
       >
         <Paper>
@@ -93,7 +97,32 @@ const SignUp = () => {
               direction="column"
               alignItems="center"
               justifyContent="center"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.13)",
+                height: "auto",
+                width: "400px",
+                position: "absolute",
+                top: "30%",
+                left: "40%",
+                borderRadius: "10px",
+                backdropFilter: "blur(10px)",
+                border: "2px solid rgba(255,255,255,0.1)",
+                paddingTop: "1rem",
+                // padding: "50px 35px",
+                boxShadow: "0 0 40px rgba(8,7,16,0.6)",
+              }}
             >
+              <Grid item textAlign="center" style={{ marginBottom: "1em" }}>
+                <Typography variant="h3" style={{ fontFamily: "Merriweather" }}>
+                  Get It Done
+                </Typography>
+                <Typography
+                  variant="body1"
+                  style={{ fontFamily: "Merriweather" }}
+                >
+                  Now or Never
+                </Typography>
+              </Grid>
               <Grid item>
                 <TextField
                   value={username}
@@ -103,7 +132,7 @@ const SignUp = () => {
                     e.preventDefault();
                     setUsername(e.target.value);
                   }}
-                  style={{ margin: "1em" }}
+                  style={{ margin: "0.5em", width: "260px" }}
                 />
               </Grid>
               <Grid item>
@@ -115,7 +144,7 @@ const SignUp = () => {
                     e.preventDefault();
                     setEmail(e.target.value);
                   }}
-                  style={{ margin: "1em" }}
+                  style={{ margin: "0.5em", width: "260px" }}
                 />
               </Grid>
               <Grid item>
@@ -142,7 +171,7 @@ const SignUp = () => {
                       </InputAdornment>
                     ),
                   }}
-                  style={{ margin: "1em" }}
+                  style={{ margin: "0.5em" }}
                 />
               </Grid>
               <Grid item>
@@ -172,11 +201,15 @@ const SignUp = () => {
                     ),
                   }}
                   label="Confirm Password"
-                  style={{ margin: "1em" }}
+                  style={{ margin: "0.5em" }}
                 />
               </Grid>
               <Grid item>
-                <Button variant="outlined" type="submit">
+                <Button
+                  variant="outlined"
+                  type="submit"
+                  style={{ margin: "1em" }}
+                >
                   Create new Account
                 </Button>
               </Grid>

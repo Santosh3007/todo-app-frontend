@@ -13,6 +13,9 @@ import { RootState } from "../Redux/store";
 import { setIsAuthenticated } from "../Redux/Auth";
 import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
 import useAuth from "../Hooks/useAuth";
+import background from "../images/background.jpg";
+import logo from "../images/logo1.png";
+import { Typography } from "@mui/material";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,13 +36,11 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(e.target);
     formSubmit(e.target);
   };
 
   const formSubmit = async (formData) => {
     let data = new FormData(formData);
-    console.log(Array.from(data));
     await fetch(
       "http://todo-api-env.eba-xaznfkbj.ap-southeast-1.elasticbeanstalk.com/authenticate",
       {
@@ -59,13 +60,11 @@ const Login = () => {
             })
           );
         }
-        console.log(response);
         return response.status >= 400
           ? Promise.reject("error")
           : response.json();
       })
       .then((response) => {
-        console.log(response);
         localStorage.setItem("token", response.auth_token);
         if (response.auth_token) {
           dispatch(setIsAuthenticated(true));
@@ -92,6 +91,11 @@ const Login = () => {
           minWidth: "100%",
           display: "flex",
           justifyContent: "center",
+          backgroundImage: `url(${background})`,
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundColor: "black",
         }}
       >
         <Paper>
@@ -102,7 +106,46 @@ const Login = () => {
               direction="column"
               alignItems="center"
               justifyContent="center"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.13)",
+                height: "auto",
+                width: "400px",
+                position: "absolute",
+                top: "30%",
+                left: "40%",
+                borderRadius: "10px",
+                backdropFilter: "blur(10px)",
+                border: "2px solid rgba(255,255,255,0.1)",
+                paddingTop: "1rem",
+                // padding: "50px 35px",
+                boxShadow: "0 0 40px rgba(8,7,16,0.6)",
+              }}
             >
+              <Grid item textAlign="center">
+                <Grid container alignItems="center">
+                  <Grid item>
+                    <img src={logo} width="45px" height="45px" />
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      variant="h3"
+                      style={{
+                        fontFamily: "Merriweather",
+                        marginLeft: "0.2em",
+                        marginRight: "0.5em",
+                      }}
+                    >
+                      Get It Done
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Typography
+                  variant="body1"
+                  style={{ fontFamily: "Merriweather" }}
+                >
+                  Now or Never
+                </Typography>
+              </Grid>
               <Grid item>
                 <TextField
                   error={isInvalid}
@@ -114,7 +157,7 @@ const Login = () => {
                     setEmail(e.target.value);
                   }}
                   autoComplete="email"
-                  style={{ margin: "1em" }}
+                  style={{ margin: "1em", width: "260px" }}
                 />
               </Grid>
               <Grid item>
@@ -138,7 +181,6 @@ const Login = () => {
                         <IconButton
                           aria-label="toggle password visibility"
                           onClick={handleClickShowPassword}
-                          //   onMouseDown={handleMouseDownPassword}
                           edge="end"
                         >
                           {showPassword ? <VisibilityOff /> : <Visibility />}

@@ -29,7 +29,6 @@ const useAuth = () => {
     if (isAuthenticated) {
       return;
     } else if (localStorage.getItem("token")) {
-      console.log("Checking for Authorization");
       await fetch(
         "http://todo-api-env.eba-xaznfkbj.ap-southeast-1.elasticbeanstalk.com/authorize",
         {

@@ -137,13 +137,15 @@ const SubTodoItem = (subtask: subTask) => {
             </Grid>
           </Grid>
           <Grid item>
-            <Paper
-              elevation={2}
-              className={classes.tag}
-              sx={{ borderRadius: 8, backgroundColor: "#999999" }}
-            >
-              {subtask.tag}
-            </Paper>
+            {subtask.tag && (
+              <Paper
+                elevation={2}
+                className={classes.tag}
+                sx={{ borderRadius: 8, backgroundColor: "#999999" }}
+              >
+                {subtask.tag}
+              </Paper>
+            )}
           </Grid>
           <Grid item>
             <Button

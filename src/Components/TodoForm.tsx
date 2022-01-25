@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-// import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -26,22 +26,23 @@ import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
 
 const useStyles = makeStyles({
   nameField: {
-    margin: "1em",
+    margin: "0.5em",
   },
   descriptionField: {
-    margin: "1em",
+    margin: "0.5em",
+    width: "400px",
+    heigh: "100px",
   },
   dateTimePicker: {
-    margin: "1em",
-    padding: "2em",
+    margin: "0.5em",
     size: "auto",
     textAlign: "justify",
-    width: 300,
+    width: "230px",
   },
   cancelBtn: {
-    margin: "1em",
+    margin: "0.5em",
   },
-  addBtn: { margin: "1em" },
+  addBtn: { margin: "0.5em" },
 });
 
 const TodoForm = () => {
@@ -69,7 +70,6 @@ const TodoForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(e.target);
     formSubmit(e.target);
   };
 
@@ -85,13 +85,11 @@ const TodoForm = () => {
 
   const formSubmit = async (formData) => {
     let data = new FormData(formData);
-    // console.log(Array.from(data));
     if (id === -1) {
       //If id===-1, creating new task, else updating existing task
-      await authPost(api_url + "/tass", data)
+      await authPost(api_url + "/tasks", data)
         .then((response) => response.json())
         .then((response) => {
-          console.log(response);
           dispatch(setTasks(tasks.concat([response])));
           dispatch(resetTask());
           dispatch(
@@ -106,7 +104,6 @@ const TodoForm = () => {
       await authPatch(api_url + `/tasks/${id}`, data)
         .then((response) => response.json())
         .then((response) => {
-          console.log(response);
           dispatch(
             setTasks(tasks.filter((x) => x.id !== id).concat([response]))
           );
@@ -140,43 +137,58 @@ const TodoForm = () => {
         <DialogTitle>{id === -1 ? "Add a new Task" : "Edit Task"}</DialogTitle>
         <form onSubmit={handleSubmit} id="task_form" autoComplete="off">
           <DialogContent>
-            <TextField
-              id="task_input"
-              label="Name"
-              variant="outlined"
-              type="text"
-              name="task[title]" //Determines Form Data(IMP!)
-              value={title}
-              onChange={handleTaskChange}
-            />
-            <TextField
-              id="description_input"
-              label="Description"
-              type="text"
-              variant="outlined"
-              name="task[description]" //Determines Form Data(IMP!)
-              onChange={handleDescriptionChange}
-              value={description}
-            ></TextField>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DateTimePicker
-                renderInput={(params) => (
-                  <TextField
-                    id="deadline_input"
-                    type="text"
-                    name="task[deadline]"
-                    className={classes.dateTimePicker}
-                    {...params}
+            <Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="task_input"
+                  label="Name"
+                  variant="outlined"
+                  className={classes.nameField}
+                  type="text"
+                  name="task[title]" //Determines Form Data(IMP!)
+                  value={title}
+                  onChange={handleTaskChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="description_input"
+                  label="Description"
+                  type="text"
+                  className={classes.descriptionField}
+                  variant="outlined"
+                  name="task[description]" //Determines Form Data(IMP!)
+                  onChange={handleDescriptionChange}
+                  value={description}
+                  multiline
+                ></TextField>
+              </Grid>
+
+              <Grid item xs={12}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DateTimePicker
+                    renderInput={(params) => (
+                      <TextField
+                        id="deadline_input"
+                        type="text"
+                        name="task[deadline]"
+                        className={classes.dateTimePicker}
+                        {...params}
+                      />
+                    )}
+                    value={deadline}
+                    inputFormat="dd/MM/yyyy hh:mm a"
+                    onChange={(newDate: Date | null) => {
+                      newDate && dispatch(setDeadline(newDate));
+                    }}
                   />
-                )}
-                value={deadline}
-                inputFormat="dd/MM/yyyy hh:mm a"
-                onChange={(newDate: Date | null) => {
-                  newDate && dispatch(setDeadline(newDate));
-                }}
-              />
-            </LocalizationProvider>
-            <TagPicker typeOfTask="task" />
+                </LocalizationProvider>
+              </Grid>
+
+              <Grid item xs>
+                <TagPicker typeOfTask="task" />
+              </Grid>
+            </Grid>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} className={classes.cancelBtn}>

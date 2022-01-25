@@ -77,7 +77,7 @@ const TodoList = (props: { completed: boolean }) => {
       .then((response_items: subTask[]) => {
         dispatch(setSubtasks(response_items.sort(compare)));
       })
-      .catch((error) => console.log("here" + error));
+      .catch((error) => dispatch(setErrorSnackbar()));
   };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -141,7 +141,7 @@ const TodoList = (props: { completed: boolean }) => {
 
   return (
     <div>
-      <Grid container>
+      <Grid container style={{ backgroundColor: "#d8e2dc" }}>
         <Grid item xs={12}>
           <TextField
             id="outlined-search"
@@ -292,8 +292,28 @@ const TodoList = (props: { completed: boolean }) => {
           <Button onClick={clearSearch} disabled={!isFilteredTasks}>
             Clear Search
           </Button>
+          <Button
+            style={{
+              borderColor: "#999999",
+              backgroundColor: "#999999",
+              fontSize: 16,
+              marginLeft: "1em",
+            }}
+            variant="contained"
+            onClick={() => {
+              dispatch(toggleTaskDialogOpen());
+            }}
+            startIcon={
+              <AddCircleOutlinedIcon
+                sx={{ fontSize: 65 }}
+                style={{ color: "" }}
+              />
+            }
+          >
+            Create New Task
+          </Button>
         </Grid>
-        <Grid item>
+        <Grid item xs={8}>
           <ul>
             {tasks
               .sort(compare)
@@ -306,20 +326,7 @@ const TodoList = (props: { completed: boolean }) => {
           </ul>
           <TodoForm />
           <SubTodoForm />
-          <Grid container justifyContent="flex-end">
-            <IconButton
-              style={{ color: "#E480F6" }}
-              onClick={() => {
-                dispatch(toggleTaskDialogOpen());
-                // console.log(tasks);
-              }}
-            >
-              <AddCircleOutlinedIcon
-                sx={{ fontSize: 85 }}
-                style={{ color: "" }}
-              />
-            </IconButton>
-          </Grid>
+          <Grid container justifyContent="flex-end"></Grid>
         </Grid>
       </Grid>
     </div>

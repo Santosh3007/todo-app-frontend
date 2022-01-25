@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { RootState } from "../Redux/store";
@@ -18,17 +18,32 @@ const compare = (a, b: item) => {
 };
 
 const TasksToday = (props: { type: String }) => {
-  let tasks = useSelector((state: RootState) => state.misc.tasks)
-    .map((item) => {
-      return { ...item, isTask: true };
-    })
-    .filter((item) => !item.completed);
   let subtasks = useSelector((state: RootState) => state.misc.subtasks)
     .map((item) => {
       return { ...item, isTask: false };
     })
     .filter((item) => !item.completed);
   const api_url = useSelector((state: RootState) => state.misc.apiUrl);
+
+  let tasks = useSelector((state: RootState) => state.misc.tasks)
+    .map((item) => {
+      return { ...item, isTask: true };
+    })
+    .filter((item) => !item.completed)
+    .concat(subtasks)
+    .filter((item) => {
+      const res =
+        new Date(item.deadline).getTime() - 28800000 - new Date().getTime();
+      if (props.type == "today") {
+        return res > 0 && res < 604800000;
+      } else if (props.type == "week") {
+        return res > 0 && res < 604800000 * 7;
+      } else if (props.type == "overdue") {
+        //overdue
+        return res < 0;
+      }
+    })
+    .sort(compare);
 
   //Helps to format the date into a new DD MMM, HH:MM format
   const dateFormatter = (date: string | Date) => {
@@ -43,21 +58,11 @@ const TasksToday = (props: { type: String }) => {
       : dateString + ", " + time;
   };
 
-  tasks = tasks
-    .concat(subtasks)
-    .filter((item) => {
-      const res =
-        new Date(item.deadline).getTime() - 28800000 - new Date().getTime();
-      if (props.type == "today") {
-        return res > 0 && res < 604800000;
-      } else if (props.type == "week") {
-        return res > 0 && res < 604800000 * 7;
-      } else {
-        //overdue
-        return res < 0;
-      }
-    })
-    .sort(compare);
+  useEffect(() => {
+    console.log("rerender");
+  }, [tasks]);
+
+  tasks = tasks;
 
   let allTasks = tasks.map((item) => {
     return {
@@ -84,16 +89,18 @@ const TasksToday = (props: { type: String }) => {
               </Grid>
 
               <Grid item xs={1.9}>
-                <Paper
-                  elevation={2}
-                  style={{ textAlign: "center", padding: "0.3em" }}
-                  sx={{
-                    borderRadius: 8,
-                    backgroundColor: "#999999",
-                  }}
-                >
-                  {item.tag}
-                </Paper>
+                {item.tag && (
+                  <Paper
+                    elevation={2}
+                    style={{ textAlign: "center", padding: "0.3em" }}
+                    sx={{
+                      borderRadius: 8,
+                      backgroundColor: "#b4b3b6",
+                    }}
+                  >
+                    {item.tag}
+                  </Paper>
+                )}
               </Grid>
 
               <Grid item xs textAlign="right">
@@ -156,7 +163,8 @@ const TasksToday = (props: { type: String }) => {
       })
       .catch((error) => dispatch(setErrorSnackbar()));
   };
-
+  console.log(props.type);
+  console.log(allTasks);
   return (
     <>
       <Typography variant="h5" style={{ marginLeft: "2em" }}>
@@ -178,7 +186,7 @@ const TasksToday = (props: { type: String }) => {
           marginBottom: "1.2rem",
           marginTop: "0.6rem",
           borderRadius: 20,
-          backgroundColor: "#ffff80",
+          backgroundColor: "#f1e9da",
         }}
       >
         <List>
@@ -187,7 +195,9 @@ const TasksToday = (props: { type: String }) => {
             <>
               <ListItem>
                 <Typography variant="body1" textAlign="left">
-                  "Good job! You have completed all your tasks!"
+                  {props.type == "progress"
+                    ? "Coming Soon!"
+                    : "Good job! You have completed all your tasks!"}
                 </Typography>
               </ListItem>
               <Divider variant="middle" component="li" />

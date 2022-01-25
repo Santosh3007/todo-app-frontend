@@ -16,6 +16,7 @@ import IconButton from "@mui/material/IconButton";
 import Divider from "@mui/material/Divider";
 import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
 import useAuth from "../Hooks/useAuth";
+import background from "../images/background.jpg";
 
 const Account = () => {
   const [formUsername, setFormUsername] = useState(
@@ -54,7 +55,6 @@ const Account = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(e.target);
     formSubmit(e.target);
   };
 
@@ -69,20 +69,17 @@ const Account = () => {
       return;
     }
     e.preventDefault();
-    // console.log(e.target);
     passwordFormSubmit(e.target);
   };
 
   const formSubmit = async (formData) => {
     let data = new FormData(formData);
-    console.log(Array.from(data));
     await authPatch(
       "http://todo-api-env.eba-xaznfkbj.ap-southeast-1.elasticbeanstalk.com/users/" +
         userId,
       data
     )
       .then((response) => {
-        console.log(response);
         dispatch(
           setCustomSnackbar({
             message: "User information updated successfully!",
@@ -97,7 +94,6 @@ const Account = () => {
 
   const passwordFormSubmit = async (formData) => {
     let data = new FormData(formData);
-    // console.log( Array.from(data));
     await authPatch(
       "http://todo-api-env.eba-xaznfkbj.ap-southeast-1.elasticbeanstalk.com/update_password",
       JSON.stringify({
@@ -107,7 +103,6 @@ const Account = () => {
       })
     )
       .then((response) => {
-        console.log(response);
         if (response.status === 400) {
           dispatch(
             setCustomSnackbar({
@@ -127,9 +122,6 @@ const Account = () => {
           setPasswordCfm("");
         }
       })
-      .then((response) => {
-        console.log(response);
-      })
       .catch((error) => dispatch(setErrorSnackbar()));
   };
 
@@ -144,9 +136,20 @@ const Account = () => {
           minWidth: "100%",
           display: "flex",
           justifyContent: "center",
+          backgroundColor: "#d8e2dc",
         }}
       >
-        <Paper elevation={3}>
+        <Paper
+          elevation={3}
+          style={{
+            backgroundColor: "#f1e9da",
+            borderRadius: "10px",
+            backdropFilter: "blur(10px)",
+            border: "2px solid rgba(255,255,255,0.1)",
+            paddingTop: "1rem",
+            boxShadow: "0 0 40px rgba(8,7,16,0.6)",
+          }}
+        >
           <Typography variant="h4" style={{ margin: "1.5rem" }}>
             Update User Information
           </Typography>

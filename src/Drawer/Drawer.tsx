@@ -137,8 +137,9 @@ export default function MiniDrawer() {
     <>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
+
         <Drawer variant="permanent" open={open}>
-          <DrawerHeader>
+          <DrawerHeader style={{ backgroundColor: "#d8e2dc" }}>
             {open ? (
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === "rtl" ? (
@@ -159,7 +160,9 @@ export default function MiniDrawer() {
             )}
           </DrawerHeader>
           <Divider />
-          <List style={{ justifyContent: "center" }}>
+          <List
+            style={{ justifyContent: "center", backgroundColor: "#d8e2dc" }}
+          >
             {["Home", "Upcoming Tasks", "Completed"].map((text, index) => (
               <ListItem button key={text} style={{ justifyContent: "center" }}>
                 <ListItemIcon
@@ -171,8 +174,14 @@ export default function MiniDrawer() {
               </ListItem>
             ))}
           </List>
-          <Divider />
-          <List style={{ position: "absolute", bottom: "0px" }}>
+          <Divider style={{ backgroundColor: "#d8e2dc" }} />
+          <List
+            style={{
+              position: "absolute",
+              bottom: "0px",
+              backgroundColor: "#d8e2dc",
+            }}
+          >
             <Divider />
             {["Account", "Log Out"].map((text, index) => (
               <ListItem button key={text} style={{ justifyContent: "center" }}>

@@ -100,6 +100,7 @@ export default function TagPicker(props: { typeOfTask: string }) {
             id="tag_input"
             type="text"
             name={props.typeOfTask + "[tag]"}
+            style={{ margin: "0.5em", width: "230px" }}
           />
         )}
       />

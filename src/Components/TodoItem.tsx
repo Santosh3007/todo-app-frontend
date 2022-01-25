@@ -28,8 +28,9 @@ const useStyles = makeStyles({
     margin: "1em",
   },
   paper: {
-    margin: "1em",
-    padding: "1em",
+    margin: "0.75em",
+    padding: "0.5em",
+    paddingRight: "1em",
     // textAlign: "justify",
     width: "auto",
   },
@@ -104,7 +105,11 @@ const TodoItem = (item: item) => {
 
   return (
     <>
-      <Paper elevation={3} className={classes.paper} sx={{ borderRadius: 20 }}>
+      <Paper
+        elevation={3}
+        className={classes.paper}
+        sx={{ borderRadius: 20, backgroundColor: "#f1e9da" }}
+      >
         <Grid container rowSpacing={1} margin={2} alignItems="center">
           <Checkbox
             defaultChecked={item.completed}
@@ -145,13 +150,15 @@ const TodoItem = (item: item) => {
             </Grid>
           </Grid>
           <Grid item>
-            <Paper
-              elevation={2}
-              className={classes.tag}
-              sx={{ borderRadius: 8, backgroundColor: "#999999" }}
-            >
-              {item.tag}
-            </Paper>
+            {item.tag && (
+              <Paper
+                elevation={2}
+                className={classes.tag}
+                sx={{ borderRadius: 8, backgroundColor: "#999999" }}
+              >
+                {item.tag}
+              </Paper>
+            )}
           </Grid>
           <Grid item>
             <Button
@@ -183,7 +190,6 @@ const TodoItem = (item: item) => {
             style={{ marginLeft: "3em" }}
             onClick={() => {
               dispatch(setTaskInFocus(item.id));
-              console.log("done");
               dispatch(toggleSubtaskDialogOpen());
             }}
           >
