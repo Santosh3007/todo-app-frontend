@@ -94,23 +94,25 @@ export default function MiniDrawer() {
       case 0:
         return (
           <Link to="/home">
-            <HomeIcon style={{ fontSize: "300%" }} />
+            <HomeIcon style={{ fontSize: "300%", color: "black" }} />
           </Link>
         );
       case 1:
         return (
           <Link to="/tasks">
-            <ListAltOutlinedIcon style={{ fontSize: "300%" }} />
+            <ListAltOutlinedIcon style={{ fontSize: "300%", color: "black" }} />
           </Link>
         );
       case 2:
         return (
           <Link to="/completed">
-            <AssignmentTurnedInIcon style={{ fontSize: "300%" }} />
+            <AssignmentTurnedInIcon
+              style={{ fontSize: "300%", color: "black" }}
+            />
           </Link>
         );
       default:
-        return <InboxIcon style={{ fontSize: "300%" }} />;
+        return <InboxIcon style={{ fontSize: "300%", color: "black" }} />;
     }
   };
 
@@ -119,27 +121,31 @@ export default function MiniDrawer() {
       case 0:
         return (
           <Link to="/account">
-            <ManageAccountsIcon style={{ fontSize: "300%" }} />
+            <ManageAccountsIcon style={{ fontSize: "300%", color: "black" }} />
           </Link>
         );
       case 1:
         return (
           <Link to="/login" onClick={logout}>
-            <LogoutIcon style={{ fontSize: "300%" }} />;
+            <LogoutIcon style={{ fontSize: "300%", color: "black" }} />;
           </Link>
         );
       default:
-        return <LogoutIcon style={{ fontSize: "300%" }} />;
+        return <LogoutIcon style={{ fontSize: "300%", color: "black" }} />;
     }
   };
 
   return (
     <>
-      <Box sx={{ display: "flex" }}>
+      <Box
+        style={{
+          display: "flex",
+        }}
+      >
         <CssBaseline />
 
         <Drawer variant="permanent" open={open}>
-          <DrawerHeader style={{ backgroundColor: "#d8e2dc" }}>
+          <DrawerHeader>
             {open ? (
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === "rtl" ? (
@@ -160,9 +166,7 @@ export default function MiniDrawer() {
             )}
           </DrawerHeader>
           <Divider />
-          <List
-            style={{ justifyContent: "center", backgroundColor: "#d8e2dc" }}
-          >
+          <List style={{ justifyContent: "center" }}>
             {["Home", "Upcoming Tasks", "Completed"].map((text, index) => (
               <ListItem button key={text} style={{ justifyContent: "center" }}>
                 <ListItemIcon
@@ -174,18 +178,24 @@ export default function MiniDrawer() {
               </ListItem>
             ))}
           </List>
-          <Divider style={{ backgroundColor: "#d8e2dc" }} />
+          <Divider />
           <List
             style={{
-              position: "absolute",
+              //  position: "absolute",
               bottom: "0px",
-              backgroundColor: "#d8e2dc",
+              justifyContent: "center",
             }}
           >
             <Divider />
             {["Account", "Log Out"].map((text, index) => (
-              <ListItem button key={text} style={{ justifyContent: "center" }}>
-                <ListItemIcon style={{ marginRight: "1rem" }}>
+              <ListItem
+                button
+                key={text}
+                style={{ justifyContent: "center", textAlign: "left" }}
+              >
+                <ListItemIcon
+                  style={{ marginRight: "1rem", marginLeft: "1rem" }}
+                >
                   {iconListBottom(index)}
                 </ListItemIcon>
                 <ListItemText primary={text} />

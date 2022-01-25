@@ -141,192 +141,195 @@ const TodoList = (props: { completed: boolean }) => {
 
   return (
     <div>
-      <Grid container style={{ backgroundColor: "#d8e2dc" }}>
+      <Grid container direction="column">
         <Grid item xs={12}>
-          <TextField
-            id="outlined-search"
-            placeholder="Search"
-            type="search"
-            value={searchText}
-            onChange={(e) => {
-              setSearchText(e.target.value);
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-            style={{ margin: "2em", width: 800, marginLeft: "3.5em" }}
-          />
-          <IconButton
-            id="basic-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-          >
-            <FilterAltIcon sx={{ fontSize: 34, margin: "1em" }} />
-          </IconButton>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <Grid>
-              <Grid item>
-                <TextField
-                  id="outlined-search"
-                  placeholder="Search"
-                  type="search"
-                  value={searchText}
-                  onChange={(e) => {
-                    setSearchText(e.target.value);
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  style={{ margin: "1em" }}
-                />
-              </Grid>
-              <Grid item>
-                <ToggleButtonGroup
-                  color="primary"
-                  value={order}
-                  exclusive
-                  onChange={handleChange}
-                  style={{ marginLeft: "1em" }}
-                >
-                  <ToggleButton value="ascending">Ascending</ToggleButton>
-                  <ToggleButton value="descending">Descending</ToggleButton>
-                </ToggleButtonGroup>
-              </Grid>
-              <Grid item>
-                <Autocomplete
-                  multiple
-                  id="tags-filled"
-                  value={searchTags}
-                  options={tasks.map((task) => task.tag).filter(onlyUnique)}
-                  freeSolo
-                  onChange={(e, v) => setSearchTags(v)}
-                  renderTags={(value: string[], getTagProps) =>
-                    value.map((option: string, index: number) => (
-                      <Chip
-                        variant="outlined"
-                        label={option}
-                        {...getTagProps({ index })}
-                      />
-                    ))
-                  }
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Tags"
-                      style={{ margin: "1em", width: "auto" }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item>
-                Due After
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DateTimePicker
-                    renderInput={(params) => (
-                      <TextField
-                        id="deadline_input"
-                        type="text"
-                        name="task[deadline]"
-                        // className={classes.dateTimePicker}
-                        {...params}
-                      />
-                    )}
-                    value={startDeadline}
-                    inputFormat="dd/MM/yyyy hh:mm a"
-                    onChange={(newDate: Date | null) => {
-                      newDate && setStartDeadline(newDate);
-                    }}
-                  />
-                </LocalizationProvider>
-              </Grid>
-              <Grid item>
-                Due Before
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DateTimePicker
-                    renderInput={(params) => (
-                      <TextField
-                        id="deadline_input"
-                        type="text"
-                        name="task[deadline]"
-                        // className={classes.dateTimePicker}
-                        {...params}
-                      />
-                    )}
-                    value={endDeadline}
-                    inputFormat="dd/MM/yyyy hh:mm a"
-                    onChange={(newDate: Date | null) => {
-                      newDate && setEndDeadline(newDate);
-                    }}
-                  />
-                </LocalizationProvider>
-              </Grid>
-              <Button
-                variant="outlined"
-                startIcon={<FilterAltIcon />}
-                onClick={filterTasks}
+          <Grid container style={{ height: "100%" }}>
+            <Grid item xs={12}>
+              <TextField
+                id="outlined-search"
+                placeholder="Search"
+                type="search"
+                value={searchText}
+                onChange={(e) => {
+                  setSearchText(e.target.value);
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                style={{ margin: "2em", width: 800, marginLeft: "3.5em" }}
+              />
+              <IconButton
+                id="basic-button"
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
               >
-                Filter
+                <FilterAltIcon sx={{ fontSize: 34, margin: "1em" }} />
+              </IconButton>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <Grid>
+                  <Grid item>
+                    <TextField
+                      id="outlined-search"
+                      placeholder="Search"
+                      type="search"
+                      value={searchText}
+                      onChange={(e) => {
+                        setSearchText(e.target.value);
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                      style={{ margin: "1em" }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <ToggleButtonGroup
+                      color="primary"
+                      value={order}
+                      exclusive
+                      onChange={handleChange}
+                      style={{ marginLeft: "1em" }}
+                    >
+                      <ToggleButton value="ascending">Ascending</ToggleButton>
+                      <ToggleButton value="descending">Descending</ToggleButton>
+                    </ToggleButtonGroup>
+                  </Grid>
+                  <Grid item>
+                    <Autocomplete
+                      multiple
+                      id="tags-filled"
+                      value={searchTags}
+                      options={tasks.map((task) => task.tag).filter(onlyUnique)}
+                      freeSolo
+                      onChange={(e, v) => setSearchTags(v)}
+                      renderTags={(value: string[], getTagProps) =>
+                        value.map((option: string, index: number) => (
+                          <Chip
+                            variant="outlined"
+                            label={option}
+                            {...getTagProps({ index })}
+                          />
+                        ))
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="outlined"
+                          label="Tags"
+                          style={{ margin: "1em", width: "auto" }}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item>
+                    Due After
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DateTimePicker
+                        renderInput={(params) => (
+                          <TextField
+                            id="deadline_input"
+                            type="text"
+                            name="task[deadline]"
+                            // className={classes.dateTimePicker}
+                            {...params}
+                          />
+                        )}
+                        value={startDeadline}
+                        inputFormat="dd/MM/yyyy hh:mm a"
+                        onChange={(newDate: Date | null) => {
+                          newDate && setStartDeadline(newDate);
+                        }}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item>
+                    Due Before
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DateTimePicker
+                        renderInput={(params) => (
+                          <TextField
+                            id="deadline_input"
+                            type="text"
+                            name="task[deadline]"
+                            // className={classes.dateTimePicker}
+                            {...params}
+                          />
+                        )}
+                        value={endDeadline}
+                        inputFormat="dd/MM/yyyy hh:mm a"
+                        onChange={(newDate: Date | null) => {
+                          newDate && setEndDeadline(newDate);
+                        }}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Button
+                    variant="outlined"
+                    startIcon={<FilterAltIcon />}
+                    onClick={filterTasks}
+                  >
+                    Filter
+                  </Button>
+                </Grid>
+              </Menu>
+
+              <Button onClick={clearSearch} disabled={!isFilteredTasks}>
+                Clear Search
+              </Button>
+              <Button
+                style={{
+                  borderColor: "#999999",
+                  backgroundColor: "#999999",
+                  fontSize: 16,
+                  marginLeft: "1em",
+                }}
+                variant="contained"
+                onClick={() => {
+                  dispatch(toggleTaskDialogOpen());
+                }}
+                startIcon={
+                  <AddCircleOutlinedIcon
+                    sx={{ fontSize: 65 }}
+                    style={{ color: "" }}
+                  />
+                }
+              >
+                Create New Task
               </Button>
             </Grid>
-          </Menu>
-
-          <Button onClick={clearSearch} disabled={!isFilteredTasks}>
-            Clear Search
-          </Button>
-          <Button
-            style={{
-              borderColor: "#999999",
-              backgroundColor: "#999999",
-              fontSize: 16,
-              marginLeft: "1em",
-            }}
-            variant="contained"
-            onClick={() => {
-              dispatch(toggleTaskDialogOpen());
-            }}
-            startIcon={
-              <AddCircleOutlinedIcon
-                sx={{ fontSize: 65 }}
-                style={{ color: "" }}
-              />
-            }
-          >
-            Create New Task
-          </Button>
-        </Grid>
-        <Grid item xs={8}>
-          <ul>
-            {tasks
-              .sort(compare)
-              .filter((task) =>
-                task.title.toLowerCase().includes(searchText.toLowerCase())
-              )
-              .map((item) => (
-                <TodoItem {...item} key={item.id} />
-              ))}
-          </ul>
-          <TodoForm />
-          <SubTodoForm />
-          <Grid container justifyContent="flex-end"></Grid>
+            <Grid item xs={8}>
+              <ul>
+                {tasks
+                  .sort(compare)
+                  .filter((task) =>
+                    task.title.toLowerCase().includes(searchText.toLowerCase())
+                  )
+                  .map((item) => (
+                    <TodoItem {...item} key={item.id} />
+                  ))}
+              </ul>
+              <TodoForm />
+              <SubTodoForm />
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </div>

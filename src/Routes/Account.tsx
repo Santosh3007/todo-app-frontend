@@ -142,7 +142,6 @@ const Account = () => {
         <Paper
           elevation={3}
           style={{
-            backgroundColor: "#f1e9da",
             borderRadius: "10px",
             backdropFilter: "blur(10px)",
             border: "2px solid rgba(255,255,255,0.1)",

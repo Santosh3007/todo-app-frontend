@@ -55,7 +55,7 @@ const Home = () => {
               marginBottom: "1rem",
             }}
           >
-            Hello {username}
+            Welcome back, {username}
           </Typography>
         </Grid>
         <Grid item xs alignContent="center">
@@ -65,7 +65,6 @@ const Home = () => {
               marginRight: "1rem",
               textAlign: "center",
               fontFamily: "Merriweather",
-              backgroundColor: "#f1e9da",
               borderRadius: "1.2rem",
               padding: "0.5rem",
             }}

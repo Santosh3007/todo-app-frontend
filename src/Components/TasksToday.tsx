@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { RootState } from "../Redux/store";
@@ -12,6 +12,7 @@ import { setTasks, setSubtasks } from "../Redux/Misc";
 import Typography from "@mui/material/Typography";
 import { item, subTask } from "../Interfaces";
 import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
+import { useNavigate } from "react-router-dom";
 
 const compare = (a, b: item) => {
   return a.deadline < b.deadline ? -1 : a.deadline > b.deadline ? 1 : 0;
@@ -45,6 +46,8 @@ const TasksToday = (props: { type: String }) => {
     })
     .sort(compare);
 
+  const navigate = useNavigate();
+
   //Helps to format the date into a new DD MMM, HH:MM format
   const dateFormatter = (date: string | Date) => {
     const newDate = new Date(date).toUTCString();
@@ -58,9 +61,27 @@ const TasksToday = (props: { type: String }) => {
       : dateString + ", " + time;
   };
 
+  const { authPatch, authFetch } = useApi();
+  const [checked, setChecked] = useState(true);
+
+  const getTasks = () => {
+    authFetch(api_url + "/tasks")
+      .then((response) => response.json())
+      .then((response_items: item[]) => {
+        dispatch(setTasks(response_items.sort(compare)));
+      })
+      .catch((error) => dispatch(setErrorSnackbar()));
+
+    authFetch(api_url + "/subtasks")
+      .then((response) => response.json())
+      .then((response_items: subTask[]) => {
+        dispatch(setSubtasks(response_items.sort(compare)));
+      })
+      .catch((error) => dispatch(setErrorSnackbar()));
+  };
   useEffect(() => {
-    console.log("rerender");
-  }, [tasks]);
+    getTasks();
+  }, [checked]);
 
   tasks = tasks;
 
@@ -120,7 +141,6 @@ const TasksToday = (props: { type: String }) => {
   });
 
   const dispatch = useDispatch();
-  const { authPatch } = useApi();
 
   const handleTaskComplete = async (id: number) => {
     await authPatch(
@@ -131,7 +151,7 @@ const TasksToday = (props: { type: String }) => {
     )
       .then((response) => response.json())
       .then((response) => {
-        dispatch(setTasks(tasks.filter((x) => x.id !== id).concat([response])));
+        setChecked(!checked);
         dispatch(
           setCustomSnackbar({
             message: "Task Completed Successfully!",
@@ -140,6 +160,7 @@ const TasksToday = (props: { type: String }) => {
         );
       })
       .catch((error) => dispatch(setErrorSnackbar()));
+    navigate("/home");
   };
 
   const handleSubtaskComplete = async (id: number) => {
@@ -151,9 +172,6 @@ const TasksToday = (props: { type: String }) => {
     )
       .then((response) => response.json())
       .then((response) => {
-        dispatch(
-          setSubtasks(subtasks.filter((x) => x.id !== id).concat([response]))
-        );
         dispatch(
           setCustomSnackbar({
             message: "Task Completed Successfully!",
@@ -186,7 +204,6 @@ const TasksToday = (props: { type: String }) => {
           marginBottom: "1.2rem",
           marginTop: "0.6rem",
           borderRadius: 20,
-          backgroundColor: "#f1e9da",
         }}
       >
         <List>
