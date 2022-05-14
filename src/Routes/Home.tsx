@@ -10,6 +10,10 @@ import useApi from "../Hooks/useApi";
 import { item, subTask } from "../Interfaces";
 import { setTasks, setSubtasks } from "../Redux/Misc";
 import { setErrorSnackbar } from "../Redux/Misc";
+import Button from "@mui/material/Button";
+import { toggleTaskDialogOpen } from "../Redux/NewTaskSlice";
+import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
+import TodoForm from "../Components/TodoForm";
 
 const Home = () => {
   const username = useSelector((state: RootState) => state.auth.username);
@@ -46,7 +50,7 @@ const Home = () => {
         alignContent={"justify"}
         style={{ backgroundColor: "#d8e2dc" }}
       >
-        <Grid item xs={10} alignContent="center">
+        <Grid item xs={8} alignContent="center">
           <Typography
             variant="h3"
             style={{
@@ -57,6 +61,28 @@ const Home = () => {
           >
             Welcome back, {username}
           </Typography>
+        </Grid>
+        <Grid item xs alignContent="center">
+          <Button
+            style={{
+              borderColor: "#999999",
+              backgroundColor: "#999999",
+              fontSize: 16,
+              marginLeft: "1em",
+            }}
+            variant="contained"
+            onClick={() => {
+              dispatch(toggleTaskDialogOpen());
+            }}
+            startIcon={
+              <AddCircleOutlinedIcon
+                sx={{ fontSize: 65 }}
+                style={{ color: "" }}
+              />
+            }
+          >
+            Create New Task
+          </Button>
         </Grid>
         <Grid item xs alignContent="center">
           <Typography
@@ -93,6 +119,7 @@ const Home = () => {
           </Typography>
         </Grid>
       </Grid>
+      <TodoForm />
     </>
   );
 };

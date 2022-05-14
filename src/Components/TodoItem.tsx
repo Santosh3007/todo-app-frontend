@@ -105,7 +105,11 @@ const TodoItem = (item: item) => {
 
   return (
     <>
-      <Paper elevation={3} className={classes.paper} sx={{ borderRadius: 20 }}>
+      <Paper
+        elevation={3}
+        className={classes.paper}
+        sx={{ borderRadius: 20, backgroundColor: "#d8e2dc" }}
+      >
         <Grid container rowSpacing={1} margin={2} alignItems="center">
           <Checkbox
             defaultChecked={item.completed}

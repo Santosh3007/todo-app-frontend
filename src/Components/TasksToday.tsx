@@ -35,11 +35,11 @@ const TasksToday = (props: { type: String }) => {
     .filter((item) => {
       const res =
         new Date(item.deadline).getTime() - 28800000 - new Date().getTime();
-      if (props.type == "today") {
-        return res > 0 && res < 604800000;
-      } else if (props.type == "week") {
-        return res > 0 && res < 604800000 * 7;
-      } else if (props.type == "overdue") {
+      if (props.type === "today") {
+        return res > 0 && res < 86400000;
+      } else if (props.type === "week") {
+        return res > 0 && res < 86400000 * 7;
+      } else if (props.type === "overdue") {
         //overdue
         return res < 0;
       }
@@ -54,9 +54,9 @@ const TasksToday = (props: { type: String }) => {
     const day = newDate.slice(0, 3); //Show Day instead of date if date falls within same week
     const dateString = newDate.slice(5, 11);
     const time = newDate.slice(17, 22);
-    return props.type == "today"
+    return props.type === "today"
       ? time
-      : props.type == "week"
+      : props.type === "week"
       ? day + ", " + time
       : dateString + ", " + time;
   };
@@ -127,7 +127,7 @@ const TasksToday = (props: { type: String }) => {
               <Grid item xs textAlign="right">
                 <Typography
                   variant="body2"
-                  color={props.type == "overdue" ? "red" : "text.secondary"} //To check if Task is overdue
+                  color={props.type === "overdue" ? "red" : "text.secondary"} //To check if Task is overdue
                 >
                   {dateFormatter(item.deadline)}
                 </Typography>
@@ -181,8 +181,6 @@ const TasksToday = (props: { type: String }) => {
       })
       .catch((error) => dispatch(setErrorSnackbar()));
   };
-  console.log(props.type);
-  console.log(allTasks);
   return (
     <>
       <Typography variant="h5" style={{ marginLeft: "2em" }}>
@@ -212,7 +210,7 @@ const TasksToday = (props: { type: String }) => {
             <>
               <ListItem>
                 <Typography variant="body1" textAlign="left">
-                  {props.type == "progress"
+                  {props.type === "progress"
                     ? "Coming Soon!"
                     : "Good job! You have completed all your tasks!"}
                 </Typography>
