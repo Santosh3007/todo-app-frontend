@@ -126,7 +126,7 @@ const Account = () => {
         alignItems="center"
         style={{
           minHeight: "100vh",
-          minWidth: "100%",
+          minWidth: "100vh",
           display: "flex",
           justifyContent: "center",
           backgroundColor: "#d8e2dc",

@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import TasksToday from "../Components/TasksToday";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
@@ -40,20 +39,26 @@ const Home = () => {
 
   useEffect(() => {
     getTasks();
-  }, []);
+  });
 
   return (
     <>
       <Grid
         container
-        alignItems={"center"}
-        alignContent={"justify"}
-        style={{ backgroundColor: "#d8e2dc" }}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-evenly"
+        style={{
+          backgroundColor: "#d8e2dc",
+          minHeight: "100vh",
+          height: "auto",
+        }}
       >
-        <Grid item xs={8} alignContent="center">
+        <Grid item md={8} xs={12} alignContent="center">
           <Typography
             variant="h3"
             style={{
+              fontSize: "2rem",
               marginLeft: "2rem",
               fontFamily: "Merriweather",
               marginBottom: "1rem",
@@ -65,6 +70,7 @@ const Home = () => {
         <Grid item xs alignContent="center">
           <Button
             style={{
+              float: "right",
               borderColor: "#999999",
               backgroundColor: "#999999",
               fontSize: 16,
@@ -88,6 +94,7 @@ const Home = () => {
           <Typography
             variant="h5"
             style={{
+              float: "right",
               marginRight: "1rem",
               textAlign: "center",
               fontFamily: "Merriweather",
@@ -98,16 +105,16 @@ const Home = () => {
             {new Date().toDateString()}
           </Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item md={6} xs={12}>
           <TasksToday type="today" />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item md={6} xs={12}>
           <TasksToday type="overdue" />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item md={6} xs={12}>
           <TasksToday type="week" />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item md={6} xs={12}>
           <TasksToday type="progress" />
         </Grid>
         <Grid item xs={12}>
