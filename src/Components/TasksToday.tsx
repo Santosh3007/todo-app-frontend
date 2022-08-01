@@ -14,7 +14,7 @@ import { item, subTask } from "../Interfaces";
 import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
 import { useNavigate } from "react-router-dom";
 
-const compare = (a, b: item) => {
+const compare = (a: item, b: item) => {
   return a.deadline < b.deadline ? -1 : a.deadline > b.deadline ? 1 : 0;
 };
 
@@ -42,6 +42,8 @@ const TasksToday = (props: { type: String }) => {
       } else if (props.type === "overdue") {
         //overdue
         return res < 0;
+      } else {
+        return false;
       }
     })
     .sort(compare);
@@ -81,9 +83,8 @@ const TasksToday = (props: { type: String }) => {
   };
   useEffect(() => {
     getTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checked]);
-
-  tasks = tasks;
 
   let allTasks = tasks.map((item) => {
     return {
@@ -92,7 +93,7 @@ const TasksToday = (props: { type: String }) => {
         <div key={item.id}>
           <ListItem>
             <Grid container direction="row" alignItems="center">
-              <Grid item xs={1}>
+              <Grid item xs="auto">
                 <Checkbox
                   defaultChecked={item.completed}
                   onChange={(e) =>
@@ -103,17 +104,22 @@ const TasksToday = (props: { type: String }) => {
                 />
               </Grid>
 
-              <Grid item xs={7.2} display="flex" textAlign="left">
+              <Grid item xs>
                 <Typography variant="body1" textAlign="left">
                   {item.title}
                 </Typography>
               </Grid>
 
-              <Grid item xs={1.9}>
+              <Grid item>
                 {item.tag && (
                   <Paper
                     elevation={2}
-                    style={{ textAlign: "center", padding: "0.3em" }}
+                    style={{
+                      textAlign: "center",
+                      padding: "0.3em",
+                      paddingLeft: "0.7em",
+                      paddingRight: "0.7em",
+                    }}
                     sx={{
                       borderRadius: 8,
                       backgroundColor: "#b4b3b6",
@@ -124,10 +130,11 @@ const TasksToday = (props: { type: String }) => {
                 )}
               </Grid>
 
-              <Grid item xs textAlign="right">
+              <Grid item>
                 <Typography
                   variant="body2"
                   color={props.type === "overdue" ? "red" : "text.secondary"} //To check if Task is overdue
+                  style={{ marginLeft: "0.5em", marginRight: "0.5em" }}
                 >
                   {dateFormatter(item.deadline)}
                 </Typography>

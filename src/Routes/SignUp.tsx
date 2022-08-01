@@ -69,23 +69,21 @@ const SignUp = () => {
   };
   return (
     <>
-      <Grid
-        container
-        spacing={0}
-        alignItems="center"
+      <div
         style={{
           minHeight: "100vh",
-          minWidth: "100%",
+          alignItems: "center",
           display: "flex",
           justifyContent: "center",
           backgroundImage: `url(${background})`,
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
-          backgroundColor: "black",
+          backdropFilter: "blur(10px)",
+          backgroundColor: "white",
         }}
       >
-        <Paper>
+        <Paper style={{ background: "space" }}>
           <form onSubmit={handleSubmit} id="task_form">
             <Grid
               container
@@ -94,17 +92,14 @@ const SignUp = () => {
               alignItems="center"
               justifyContent="center"
               style={{
-                backgroundColor: "rgba(255,255,255,0.13)",
                 height: "auto",
                 width: "400px",
-                position: "absolute",
                 top: "30%",
                 left: "40%",
                 borderRadius: "10px",
-                backdropFilter: "blur(10px)",
+                background: "inherit",
                 border: "2px solid rgba(255,255,255,0.1)",
                 paddingTop: "1rem",
-                // padding: "50px 35px",
                 boxShadow: "0 0 40px rgba(8,7,16,0.6)",
               }}
             >
@@ -226,7 +221,7 @@ const SignUp = () => {
             </Grid>
           </form>
         </Paper>
-      </Grid>
+      </div>
     </>
   );
 };
