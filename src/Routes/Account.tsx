@@ -74,11 +74,7 @@ const Account = () => {
 
   const formSubmit = async (formData) => {
     let data = new FormData(formData);
-    await authPatch(
-      "http://todo-api-env.eba-xaznfkbj.ap-southeast-1.elasticbeanstalk.com/users/" +
-        userId,
-      data
-    )
+    await authPatch(process.env.REACT_APP_API_URL + "/users/" + userId, data)
       .then((response) => {
         dispatch(
           setCustomSnackbar({
@@ -95,7 +91,7 @@ const Account = () => {
   const passwordFormSubmit = async (formData) => {
     let data = new FormData(formData);
     await authPatch(
-      "http://todo-api-env.eba-xaznfkbj.ap-southeast-1.elasticbeanstalk.com/update_password",
+      process.env.REACT_APP_API_URL + "/update_password",
       JSON.stringify({
         old_password: oldPassword,
         password: password,

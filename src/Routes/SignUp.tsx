@@ -43,14 +43,11 @@ const SignUp = () => {
 
   const formSubmit = async (formData) => {
     let data = new FormData(formData);
-    await fetch(
-      "http://todo-api-env.eba-xaznfkbj.ap-southeast-1.elasticbeanstalk.com/users",
-      {
-        method: "POST",
-        mode: "cors",
-        body: data,
-      }
-    )
+    await fetch(process.env.REACT_APP_API_URL + "/users", {
+      method: "POST",
+      mode: "cors",
+      body: data,
+    })
       .then((response) => {
         return response.status >= 400
           ? Promise.reject("error")

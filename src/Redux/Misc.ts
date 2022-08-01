@@ -14,8 +14,7 @@ interface miscState {
 }
 
 const initialState: miscState = {
-  apiUrl:
-    "http://todo-api-env.eba-xaznfkbj.ap-southeast-1.elasticbeanstalk.com/api/v1",
+  apiUrl: process.env.REACT_APP_API_URL! + "/api/v1",
   tasks: [],
   subtasks: [],
   searchDialogOpen: false,

@@ -29,13 +29,10 @@ const useAuth = () => {
     if (isAuthenticated) {
       return;
     } else if (localStorage.getItem("token")) {
-      await fetch(
-        "http://todo-api-env.eba-xaznfkbj.ap-southeast-1.elasticbeanstalk.com/authorize",
-        {
-          method: "POST",
-          headers: { Authorization: `${localStorage.getItem("token")}` },
-        }
-      )
+      await fetch(process.env.REACT_APP_API_URL + "/authorize", {
+        method: "POST",
+        headers: { Authorization: `${localStorage.getItem("token")}` },
+      })
         .then((response) => {
           if (response.status === 200) {
             response.json().then((response) => {

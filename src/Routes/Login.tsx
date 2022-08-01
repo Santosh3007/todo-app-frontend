@@ -41,14 +41,11 @@ const Login = () => {
 
   const formSubmit = async (formData) => {
     let data = new FormData(formData);
-    await fetch(
-      "http://todo-api-env.eba-xaznfkbj.ap-southeast-1.elasticbeanstalk.com/authenticate",
-      {
-        method: "POST",
-        mode: "cors",
-        body: data,
-      }
-    )
+    await fetch(process.env.REACT_APP_API_URL + "/authenticate", {
+      method: "POST",
+      mode: "cors",
+      body: data,
+    })
       .then((response) => {
         if (response.status === 401) {
           setIsInValid(true);
