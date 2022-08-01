@@ -6,10 +6,9 @@ import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import IconButton from "@mui/material/IconButton";
-import { RootState } from "../Redux/store";
 import { setIsAuthenticated } from "../Redux/Auth";
 import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
 import useAuth from "../Hooks/useAuth";
@@ -23,9 +22,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isInvalid, setIsInValid] = useState(false);
   const navigate = useNavigate();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
-  );
   const { checkToken } = useAuth();
 
   const dispatch = useDispatch();
@@ -121,7 +117,7 @@ const Login = () => {
               <Grid item textAlign="center">
                 <Grid container alignItems="center">
                   <Grid item>
-                    <img src={logo} width="45px" height="45px" />
+                    <img src={logo} width="45px" height="45px" alt="logo" />
                   </Grid>
                   <Grid item>
                     <Typography

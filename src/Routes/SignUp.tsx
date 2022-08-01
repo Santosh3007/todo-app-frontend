@@ -6,10 +6,9 @@ import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import IconButton from "@mui/material/IconButton";
-import { RootState } from "../Redux/store";
 import { setIsAuthenticated } from "../Redux/Auth";
 import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
 import background from "../images/background.jpg";
@@ -33,7 +32,7 @@ const SignUp = () => {
   };
 
   const handleClickShowCfmPassword = () => {
-    setShowPassword(!showCfmPassword);
+    setShowCfmPassword(!showCfmPassword);
   };
 
   const handleSubmit = (e) => {
@@ -109,10 +108,24 @@ const SignUp = () => {
                 boxShadow: "0 0 40px rgba(8,7,16,0.6)",
               }}
             >
-              <Grid item textAlign="center" style={{ marginBottom: "1em" }}>
-                <Typography variant="h3" style={{ fontFamily: "Merriweather" }}>
-                  Get It Done
-                </Typography>
+              <Grid item textAlign="center">
+                <Grid container alignItems="center">
+                  <Grid item>
+                    <img src={logo} width="45px" height="45px" alt="logo" />
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      variant="h3"
+                      style={{
+                        fontFamily: "Merriweather",
+                        marginLeft: "0.2em",
+                        marginRight: "0.5em",
+                      }}
+                    >
+                      Get It Done
+                    </Typography>
+                  </Grid>
+                </Grid>
                 <Typography
                   variant="body1"
                   style={{ fontFamily: "Merriweather" }}

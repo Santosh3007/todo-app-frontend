@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
 import useApi from "../Hooks/useApi";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
@@ -16,7 +15,6 @@ import IconButton from "@mui/material/IconButton";
 import Divider from "@mui/material/Divider";
 import { setCustomSnackbar, setErrorSnackbar } from "../Redux/Misc";
 import useAuth from "../Hooks/useAuth";
-import background from "../images/background.jpg";
 
 const Account = () => {
   const [formUsername, setFormUsername] = useState(
@@ -89,7 +87,6 @@ const Account = () => {
   };
 
   const passwordFormSubmit = async (formData) => {
-    let data = new FormData(formData);
     await authPatch(
       process.env.REACT_APP_API_URL + "/update_password",
       JSON.stringify({
